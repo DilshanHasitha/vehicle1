@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <!--
+        Added the constraints for entity CashBookBalance.
+    -->
+    <changeSet id="20221109062539-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="merchant_id"
+                                 baseTableName="cash_book_balance"
+                                 constraintName="fk_cash_book_balance__merchant_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="merchant"/>
+
+        <addForeignKeyConstraint baseColumnNames="transaction_type_id"
+                                 baseTableName="cash_book_balance"
+                                 constraintName="fk_cash_book_balance__transaction_type_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="transaction_type"/>
+    </changeSet>
+</databaseChangeLog>

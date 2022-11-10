@@ -1,0 +1,67 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="images">
+      <h2 data-cy="imagesDetailsHeading"><span>Images</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ images.id }}</span>
+        </dd>
+        <dt><span>Imglob Content Type</span></dt>
+        <dd>
+          <span>{{ images.imglobContentType }}</span>
+        </dd>
+        <dt><span>Image URL</span></dt>
+        <dd>
+          <span>{{ images.imageURL }}</span>
+        </dd>
+        <dt><span>Image Name</span></dt>
+        <dd>
+          <span>{{ images.imageName }}</span>
+        </dd>
+        <dt><span>Low Res URL</span></dt>
+        <dd>
+          <span>{{ images.lowResURL }}</span>
+        </dd>
+        <dt><span>Original URL</span></dt>
+        <dd>
+          <span>{{ images.originalURL }}</span>
+        </dd>
+        <dt><span>Image Blob</span></dt>
+        <dd>
+          <div *ngIf="images.imageBlob">
+            <a (click)="openFile(images.imageBlob, images.imageBlobContentType)">
+              <img
+                [src]="'data:' + images.imageBlobContentType + ';base64,' + images.imageBlob"
+                style="max-width: 100%"
+                alt="images image"
+              />
+            </a>
+            {{ images.imageBlobContentType }}, {{ byteSize(images.imageBlob) }}
+          </div>
+        </dd>
+        <dt><span>Employee</span></dt>
+        <dd>
+          <div *ngIf="images.employee">
+            <a [routerLink]="['/employee', images.employee.id, 'view']">{{ images.employee.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/images', images.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

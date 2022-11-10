@@ -1,0 +1,34 @@
+{
+  "applications": "*",
+  "changelogDate": "20221109062545",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "expense",
+  "fields": [
+    {
+      "fieldName": "expenseCode",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "expenseName",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "expenseLimit",
+      "fieldType": "BigDecimal"
+    },
+    {
+      "fieldName": "isActive",
+      "fieldType": "Boolean"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": true,
+  "name": "Expense",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [],
+  "service": "serviceClass"
+}

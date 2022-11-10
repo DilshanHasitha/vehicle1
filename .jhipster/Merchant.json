@@ -1,0 +1,125 @@
+{
+  "applications": "*",
+  "changelogDate": "20221109062535",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "merchant",
+  "fields": [
+    {
+      "fieldName": "code",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "merchantSecret",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "creditLimit",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "isActive",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "phone",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "addressLine1",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "addressLine2",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "city",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "country",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "percentage",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "creditScore",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "email",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "pattern"],
+      "fieldValidateRulesPattern": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$"
+    },
+    {
+      "fieldName": "rating",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "leadTime",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "isSandBox",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "storeDescription",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "storeSecondaryDescription",
+      "fieldType": "String"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": true,
+  "name": "Merchant",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "vehicle",
+      "otherEntityRelationshipName": "merchant",
+      "relationshipName": "vehicle",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "images",
+      "otherEntityRelationshipName": "merchant",
+      "relationshipName": "images",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "exUser",
+      "otherEntityRelationshipName": "merchant",
+      "ownerSide": true,
+      "relationshipName": "exUser",
+      "relationshipType": "many-to-many"
+    },
+    {
+      "otherEntityName": "employeeAccount",
+      "otherEntityRelationshipName": "merchant",
+      "relationshipName": "employeeAccount",
+      "relationshipType": "one-to-many"
+    }
+  ],
+  "service": "serviceClass"
+}

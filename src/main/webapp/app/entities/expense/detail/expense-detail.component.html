@@ -1,0 +1,44 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="expense">
+      <h2 data-cy="expenseDetailsHeading"><span>Expense</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ expense.id }}</span>
+        </dd>
+        <dt><span>Expense Code</span></dt>
+        <dd>
+          <span>{{ expense.expenseCode }}</span>
+        </dd>
+        <dt><span>Expense Name</span></dt>
+        <dd>
+          <span>{{ expense.expenseName }}</span>
+        </dd>
+        <dt><span>Expense Limit</span></dt>
+        <dd>
+          <span>{{ expense.expenseLimit }}</span>
+        </dd>
+        <dt><span>Is Active</span></dt>
+        <dd>
+          <span>{{ expense.isActive }}</span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/expense', expense.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

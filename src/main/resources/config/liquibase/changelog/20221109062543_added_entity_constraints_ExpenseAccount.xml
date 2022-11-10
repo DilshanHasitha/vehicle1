@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <!--
+        Added the constraints for entity ExpenseAccount.
+    -->
+    <changeSet id="20221109062543-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="transaction_type_id"
+                                 baseTableName="expense_account"
+                                 constraintName="fk_expense_account__transaction_type_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="transaction_type"/>
+
+        <addForeignKeyConstraint baseColumnNames="merchant_id"
+                                 baseTableName="expense_account"
+                                 constraintName="fk_expense_account__merchant_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="merchant"/>
+
+        <addForeignKeyConstraint baseColumnNames="expense_id"
+                                 baseTableName="expense_account"
+                                 constraintName="fk_expense_account__expense_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="expense"/>
+    </changeSet>
+</databaseChangeLog>

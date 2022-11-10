@@ -1,0 +1,143 @@
+<div>
+  <h2 id="page-heading" data-cy="EmployeeAccountBalanceHeading">
+    <span>Employee Account Balances</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span>Refresh list</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-employee-account-balance"
+        [routerLink]="['/employee-account-balance/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span> Create a new Employee Account Balance </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <jhi-filter [filters]="filters"></jhi-filter>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="employeeAccountBalances?.length === 0">
+    <span>No Employee Account Balances found</span>
+  </div>
+
+  <div class="table-responsive table-entities" id="entities" *ngIf="employeeAccountBalances && employeeAccountBalances.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
+          <th scope="col" jhiSortBy="id">
+            <div class="d-flex">
+              <span>ID</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="balance">
+            <div class="d-flex">
+              <span>Balance</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="employee.id">
+            <div class="d-flex">
+              <span>Employee</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="merchant.id">
+            <div class="d-flex">
+              <span>Merchant</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="transactionType.id">
+            <div class="d-flex">
+              <span>Transaction Type</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let employeeAccountBalance of employeeAccountBalances; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/employee-account-balance', employeeAccountBalance.id, 'view']">{{ employeeAccountBalance.id }}</a>
+          </td>
+          <td>{{ employeeAccountBalance.balance }}</td>
+          <td>
+            <div *ngIf="employeeAccountBalance.employee">
+              <a [routerLink]="['/employee', employeeAccountBalance.employee.id, 'view']">{{ employeeAccountBalance.employee.id }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="employeeAccountBalance.merchant">
+              <a [routerLink]="['/merchant', employeeAccountBalance.merchant.id, 'view']">{{ employeeAccountBalance.merchant.id }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="employeeAccountBalance.transactionType">
+              <a [routerLink]="['/transaction-type', employeeAccountBalance.transactionType.id, 'view']">{{
+                employeeAccountBalance.transactionType.id
+              }}</a>
+            </div>
+          </td>
+          <td class="text-end">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/employee-account-balance', employeeAccountBalance.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline">View</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/employee-account-balance', employeeAccountBalance.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(employeeAccountBalance)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="employeeAccountBalances && employeeAccountBalances.length > 0">
+    <div class="d-flex justify-content-center">
+      <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
+    </div>
+
+    <div class="d-flex justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [page]="page"
+        [pageSize]="itemsPerPage"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="navigateToPage($event)"
+      ></ngb-pagination>
+    </div>
+  </div>
+</div>

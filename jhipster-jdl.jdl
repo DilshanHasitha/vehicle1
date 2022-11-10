@@ -1,0 +1,189 @@
+ entity ExUser {
+	login String required,
+    firstName String required,
+    lastName String,
+    email String required pattern(/^[^@\s]+@[^@\s]+\.[^@\s]+$/)
+    isActive Boolean,
+    phone String required,
+    addressLine1 String required,
+    addressLine2 String,
+    city String required,
+    country String required,
+    image ImageBlob,
+    userLimit BigDecimal required,
+    creditScore Double
+}
+
+entity Merchant {
+	code String required,
+    merchantSecret String required,
+    name String required,
+    creditLimit BigDecimal required,
+    isActive Boolean,    
+    phone String required,
+    addressLine1 String required,
+    addressLine2 String,
+    city String required,
+    country String required,
+    percentage BigDecimal required,
+    creditScore Double,
+    email String required pattern(/^[^@\s]+@[^@\s]+\.[^@\s]+$/),
+    rating Double,
+    leadTime Integer,
+    isSandBox Boolean,
+    storeDescription String,
+    storeSecondaryDescription String
+}
+
+entity Employee {
+	code String,
+    firstName String required,
+    lastName String,
+    email String,
+    isActive Boolean,    
+    phone String required,
+    addressLine1 String,
+    addressLine2 String,
+    city String,
+    country String,
+    salary BigDecimal,   
+}
+
+entity EmployeeType{
+	code String required,
+    name String required,
+    isActive Boolean
+}
+
+entity CashBook{
+ 	transactionDate LocalDate required,
+    transactionDescription String required,
+    transactionAmountDR BigDecimal required,
+    transactionAmountCR BigDecimal required,
+    transactionBalance BigDecimal required, 
+}
+
+entity CashBookBalance{
+    balance BigDecimal required,   
+}
+
+entity TransactionType{
+	code String required,
+    description String required,
+    isActive Boolean,   
+}
+entity EmployeeAccount{
+ 	transactionDate LocalDate required,
+    transactionDescription String required,
+    transactionAmountDR BigDecimal required,
+    transactionAmountCR BigDecimal required,
+    transactionBalance BigDecimal required,
+    
+}
+entity EmployeeAccountBalance{
+    balance BigDecimal required,   
+}
+entity ExpenseAccount{
+ 	transactionDate LocalDate required,
+    transactionDescription String required,
+    transactionAmountDR BigDecimal required,
+    transactionAmountCR BigDecimal required,
+    transactionBalance BigDecimal required,
+    
+}
+entity ExpenseAccountBalance{
+    balance BigDecimal required,   
+}
+
+entity Expense{
+    expenseCode String required,
+    expenseName String required,
+    expenseLimit BigDecimal,
+    isActive Boolean,   
+}
+entity Banners{
+  	code String,
+    heading String,
+    description String,
+    link String,
+}
+entity ExpenseType{
+	code String required,
+    name String required,
+    isActive Boolean
+
+}
+
+entity Vehicle{
+	code String required,
+    name String required,
+    relatedUserLogin String,
+    expenceCode String,
+    isActive Boolean
+}
+
+entity Images{
+	imglobContentType String,
+	imageURL String,
+	imageName String,
+	lowResURL String,
+	originalURL String,
+	imageBlob ImageBlob 
+}
+
+
+relationship ManyToOne{
+    Merchant{images} to Images{merchant},
+    Employee{type} to EmployeeType{employee}
+    
+    ExpenseAccount{transactionType} to TransactionType,
+    ExpenseAccount{merchant}  to Merchant,
+    ExpenseAccount{expense} to Expense,
+    
+    EmployeeAccount{transactionType} to TransactionType,
+    EmployeeAccount{merchant}  to Merchant{employeeAccount},
+    EmployeeAccount{employee} to Employee,
+    
+    EmployeeAccountBalance{employee}  to Employee,
+    EmployeeAccountBalance{merchant}  to Merchant,
+    EmployeeAccountBalance{transactionType}  to TransactionType,
+    
+    ExpenseAccountBalance{expense}  to Expense,
+    ExpenseAccountBalance{merchant}  to Merchant,
+    ExpenseAccountBalance{transactionType}  to TransactionType,
+    
+    CashBook{merchant}  to Merchant,
+    CashBook{transactionType}  to TransactionType,
+    
+    
+    CashBookBalance{merchant}  to Merchant,
+    CashBookBalance{transactionType}  to TransactionType,
+}
+
+relationship ManyToMany{ 
+     Merchant{exUser} to ExUser{merchant},
+     Banners{images} to Images{banners}
+}    
+
+relationship OneToMany {
+    Employee{images} to Images
+    Merchant{vehicle} to Vehicle
+}
+relationship OneToOne{
+	ExUser{relatedUser} to User{exUser},  
+    Employee{user} to User{employee},  
+    
+}
+// Set pagination options
+//paginate * with infinite-scroll
+paginate * with pagination
+
+// Use Data Transfert Objects (DTO)
+// dto * with mapstruct
+
+// Set service options to all except few
+service all with serviceClass
+
+filter * 
+// Set an angular suffix
+// angularSuffix * with mySuffix

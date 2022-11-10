@@ -1,0 +1,113 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="merchant">
+      <h2 data-cy="merchantDetailsHeading"><span>Merchant</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ merchant.id }}</span>
+        </dd>
+        <dt><span>Code</span></dt>
+        <dd>
+          <span>{{ merchant.code }}</span>
+        </dd>
+        <dt><span>Merchant Secret</span></dt>
+        <dd>
+          <span>{{ merchant.merchantSecret }}</span>
+        </dd>
+        <dt><span>Name</span></dt>
+        <dd>
+          <span>{{ merchant.name }}</span>
+        </dd>
+        <dt><span>Credit Limit</span></dt>
+        <dd>
+          <span>{{ merchant.creditLimit }}</span>
+        </dd>
+        <dt><span>Is Active</span></dt>
+        <dd>
+          <span>{{ merchant.isActive }}</span>
+        </dd>
+        <dt><span>Phone</span></dt>
+        <dd>
+          <span>{{ merchant.phone }}</span>
+        </dd>
+        <dt><span>Address Line 1</span></dt>
+        <dd>
+          <span>{{ merchant.addressLine1 }}</span>
+        </dd>
+        <dt><span>Address Line 2</span></dt>
+        <dd>
+          <span>{{ merchant.addressLine2 }}</span>
+        </dd>
+        <dt><span>City</span></dt>
+        <dd>
+          <span>{{ merchant.city }}</span>
+        </dd>
+        <dt><span>Country</span></dt>
+        <dd>
+          <span>{{ merchant.country }}</span>
+        </dd>
+        <dt><span>Percentage</span></dt>
+        <dd>
+          <span>{{ merchant.percentage }}</span>
+        </dd>
+        <dt><span>Credit Score</span></dt>
+        <dd>
+          <span>{{ merchant.creditScore }}</span>
+        </dd>
+        <dt><span>Email</span></dt>
+        <dd>
+          <span>{{ merchant.email }}</span>
+        </dd>
+        <dt><span>Rating</span></dt>
+        <dd>
+          <span>{{ merchant.rating }}</span>
+        </dd>
+        <dt><span>Lead Time</span></dt>
+        <dd>
+          <span>{{ merchant.leadTime }}</span>
+        </dd>
+        <dt><span>Is Sand Box</span></dt>
+        <dd>
+          <span>{{ merchant.isSandBox }}</span>
+        </dd>
+        <dt><span>Store Description</span></dt>
+        <dd>
+          <span>{{ merchant.storeDescription }}</span>
+        </dd>
+        <dt><span>Store Secondary Description</span></dt>
+        <dd>
+          <span>{{ merchant.storeSecondaryDescription }}</span>
+        </dd>
+        <dt><span>Images</span></dt>
+        <dd>
+          <div *ngIf="merchant.images">
+            <a [routerLink]="['/images', merchant.images.id, 'view']">{{ merchant.images.id }}</a>
+          </div>
+        </dd>
+        <dt><span>Ex User</span></dt>
+        <dd>
+          <span *ngFor="let exUser of merchant.exUsers; let last = last">
+            <a [routerLink]="['/ex-user', exUser.id, 'view']">{{ exUser.id }}</a
+            >{{ last ? '' : ', ' }}
+          </span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/merchant', merchant.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

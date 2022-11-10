@@ -1,0 +1,119 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-images-heading" data-cy="ImagesCreateUpdateHeading">Create or edit a Images</h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="row mb-3" *ngIf="editForm.controls.id.value !== null">
+          <label class="form-label" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_imglobContentType">Imglob Content Type</label>
+          <input
+            type="text"
+            class="form-control"
+            name="imglobContentType"
+            id="field_imglobContentType"
+            data-cy="imglobContentType"
+            formControlName="imglobContentType"
+          />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_imageURL">Image URL</label>
+          <input type="text" class="form-control" name="imageURL" id="field_imageURL" data-cy="imageURL" formControlName="imageURL" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_imageName">Image Name</label>
+          <input type="text" class="form-control" name="imageName" id="field_imageName" data-cy="imageName" formControlName="imageName" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_lowResURL">Low Res URL</label>
+          <input type="text" class="form-control" name="lowResURL" id="field_lowResURL" data-cy="lowResURL" formControlName="lowResURL" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_originalURL">Original URL</label>
+          <input
+            type="text"
+            class="form-control"
+            name="originalURL"
+            id="field_originalURL"
+            data-cy="originalURL"
+            formControlName="originalURL"
+          />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_imageBlob">Image Blob</label>
+          <div>
+            <img
+              [src]="'data:' + editForm.get('imageBlobContentType')!.value + ';base64,' + editForm.get('imageBlob')!.value"
+              style="max-height: 100px"
+              *ngIf="editForm.get('imageBlob')!.value"
+              alt="images image"
+            />
+            <div *ngIf="editForm.get('imageBlob')!.value" class="form-text text-danger clearfix">
+              <span class="pull-start"
+                >{{ editForm.get('imageBlobContentType')!.value }}, {{ byteSize(editForm.get('imageBlob')!.value!) }}</span
+              >
+              <button
+                type="button"
+                (click)="clearInputImage('imageBlob', 'imageBlobContentType', 'file_imageBlob')"
+                class="btn btn-secondary btn-xs pull-end"
+              >
+                <fa-icon icon="times"></fa-icon>
+              </button>
+            </div>
+            <input type="file" id="file_imageBlob" data-cy="imageBlob" (change)="setFileData($event, 'imageBlob', true)" accept="image/*" />
+          </div>
+          <input type="hidden" class="form-control" name="imageBlob" id="field_imageBlob" data-cy="imageBlob" formControlName="imageBlob" />
+          <input
+            type="hidden"
+            class="form-control"
+            name="imageBlobContentType"
+            id="field_imageBlobContentType"
+            formControlName="imageBlobContentType"
+          />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_employee">Employee</label>
+          <select
+            class="form-control"
+            id="field_employee"
+            data-cy="employee"
+            name="employee"
+            formControlName="employee"
+            [compareWith]="compareEmployee"
+          >
+            <option [ngValue]="null"></option>
+            <option [ngValue]="employeeOption" *ngFor="let employeeOption of employeesSharedCollection">{{ employeeOption.id }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

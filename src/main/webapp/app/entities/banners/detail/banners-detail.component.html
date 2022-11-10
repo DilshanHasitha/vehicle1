@@ -1,0 +1,51 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="banners">
+      <h2 data-cy="bannersDetailsHeading"><span>Banners</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ banners.id }}</span>
+        </dd>
+        <dt><span>Code</span></dt>
+        <dd>
+          <span>{{ banners.code }}</span>
+        </dd>
+        <dt><span>Heading</span></dt>
+        <dd>
+          <span>{{ banners.heading }}</span>
+        </dd>
+        <dt><span>Description</span></dt>
+        <dd>
+          <span>{{ banners.description }}</span>
+        </dd>
+        <dt><span>Link</span></dt>
+        <dd>
+          <span>{{ banners.link }}</span>
+        </dd>
+        <dt><span>Images</span></dt>
+        <dd>
+          <span *ngFor="let images of banners.images; let last = last">
+            <a [routerLink]="['/images', images.id, 'view']">{{ images.id }}</a
+            >{{ last ? '' : ', ' }}
+          </span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/banners', banners.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

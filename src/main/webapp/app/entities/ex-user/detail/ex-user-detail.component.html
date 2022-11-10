@@ -1,0 +1,89 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="exUser">
+      <h2 data-cy="exUserDetailsHeading"><span>Ex User</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ exUser.id }}</span>
+        </dd>
+        <dt><span>Login</span></dt>
+        <dd>
+          <span>{{ exUser.login }}</span>
+        </dd>
+        <dt><span>First Name</span></dt>
+        <dd>
+          <span>{{ exUser.firstName }}</span>
+        </dd>
+        <dt><span>Last Name</span></dt>
+        <dd>
+          <span>{{ exUser.lastName }}</span>
+        </dd>
+        <dt><span>Email</span></dt>
+        <dd>
+          <span>{{ exUser.email }}</span>
+        </dd>
+        <dt><span>Is Active</span></dt>
+        <dd>
+          <span>{{ exUser.isActive }}</span>
+        </dd>
+        <dt><span>Phone</span></dt>
+        <dd>
+          <span>{{ exUser.phone }}</span>
+        </dd>
+        <dt><span>Address Line 1</span></dt>
+        <dd>
+          <span>{{ exUser.addressLine1 }}</span>
+        </dd>
+        <dt><span>Address Line 2</span></dt>
+        <dd>
+          <span>{{ exUser.addressLine2 }}</span>
+        </dd>
+        <dt><span>City</span></dt>
+        <dd>
+          <span>{{ exUser.city }}</span>
+        </dd>
+        <dt><span>Country</span></dt>
+        <dd>
+          <span>{{ exUser.country }}</span>
+        </dd>
+        <dt><span>Image</span></dt>
+        <dd>
+          <div *ngIf="exUser.image">
+            <a (click)="openFile(exUser.image, exUser.imageContentType)">
+              <img [src]="'data:' + exUser.imageContentType + ';base64,' + exUser.image" style="max-width: 100%" alt="exUser image" />
+            </a>
+            {{ exUser.imageContentType }}, {{ byteSize(exUser.image) }}
+          </div>
+        </dd>
+        <dt><span>User Limit</span></dt>
+        <dd>
+          <span>{{ exUser.userLimit }}</span>
+        </dd>
+        <dt><span>Credit Score</span></dt>
+        <dd>
+          <span>{{ exUser.creditScore }}</span>
+        </dd>
+        <dt><span>Related User</span></dt>
+        <dd>
+          <span>{{ exUser.relatedUser?.id }}</span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/ex-user', exUser.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,61 @@
+{
+  "applications": "*",
+  "changelogDate": "20221109062549",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "images",
+  "fields": [
+    {
+      "fieldName": "imglobContentType",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "imageURL",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "imageName",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "lowResURL",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "originalURL",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "imageBlob",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "image"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": true,
+  "name": "Images",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "employee",
+      "otherEntityRelationshipName": "images",
+      "relationshipName": "employee",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "merchant",
+      "otherEntityRelationshipName": "images",
+      "relationshipName": "merchant",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "banners",
+      "otherEntityRelationshipName": "images",
+      "ownerSide": false,
+      "relationshipName": "banners",
+      "relationshipType": "many-to-many"
+    }
+  ],
+  "service": "serviceClass"
+}

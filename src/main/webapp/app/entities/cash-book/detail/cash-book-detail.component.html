@@ -1,0 +1,60 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="cashBook">
+      <h2 data-cy="cashBookDetailsHeading"><span>Cash Book</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ cashBook.id }}</span>
+        </dd>
+        <dt><span>Transaction Date</span></dt>
+        <dd>
+          <span>{{ cashBook.transactionDate | formatMediumDate }}</span>
+        </dd>
+        <dt><span>Transaction Description</span></dt>
+        <dd>
+          <span>{{ cashBook.transactionDescription }}</span>
+        </dd>
+        <dt><span>Transaction Amount DR</span></dt>
+        <dd>
+          <span>{{ cashBook.transactionAmountDR }}</span>
+        </dd>
+        <dt><span>Transaction Amount CR</span></dt>
+        <dd>
+          <span>{{ cashBook.transactionAmountCR }}</span>
+        </dd>
+        <dt><span>Transaction Balance</span></dt>
+        <dd>
+          <span>{{ cashBook.transactionBalance }}</span>
+        </dd>
+        <dt><span>Merchant</span></dt>
+        <dd>
+          <div *ngIf="cashBook.merchant">
+            <a [routerLink]="['/merchant', cashBook.merchant.id, 'view']">{{ cashBook.merchant.id }}</a>
+          </div>
+        </dd>
+        <dt><span>Transaction Type</span></dt>
+        <dd>
+          <div *ngIf="cashBook.transactionType">
+            <a [routerLink]="['/transaction-type', cashBook.transactionType.id, 'view']">{{ cashBook.transactionType.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/cash-book', cashBook.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

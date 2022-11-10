@@ -1,0 +1,40 @@
+{
+  "applications": "*",
+  "changelogDate": "20221109062546",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "banners",
+  "fields": [
+    {
+      "fieldName": "code",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "heading",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "link",
+      "fieldType": "String"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": true,
+  "name": "Banners",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "images",
+      "otherEntityRelationshipName": "banners",
+      "ownerSide": true,
+      "relationshipName": "images",
+      "relationshipType": "many-to-many"
+    }
+  ],
+  "service": "serviceClass"
+}

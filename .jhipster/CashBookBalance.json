@@ -1,0 +1,32 @@
+{
+  "applications": "*",
+  "changelogDate": "20221109062539",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "cash_book_balance",
+  "fields": [
+    {
+      "fieldName": "balance",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": true,
+  "name": "CashBookBalance",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "merchant",
+      "relationshipName": "merchant",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "transactionType",
+      "relationshipName": "transactionType",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "service": "serviceClass"
+}

@@ -1,0 +1,66 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="employeeAccount">
+      <h2 data-cy="employeeAccountDetailsHeading"><span>Employee Account</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ employeeAccount.id }}</span>
+        </dd>
+        <dt><span>Transaction Date</span></dt>
+        <dd>
+          <span>{{ employeeAccount.transactionDate | formatMediumDate }}</span>
+        </dd>
+        <dt><span>Transaction Description</span></dt>
+        <dd>
+          <span>{{ employeeAccount.transactionDescription }}</span>
+        </dd>
+        <dt><span>Transaction Amount DR</span></dt>
+        <dd>
+          <span>{{ employeeAccount.transactionAmountDR }}</span>
+        </dd>
+        <dt><span>Transaction Amount CR</span></dt>
+        <dd>
+          <span>{{ employeeAccount.transactionAmountCR }}</span>
+        </dd>
+        <dt><span>Transaction Balance</span></dt>
+        <dd>
+          <span>{{ employeeAccount.transactionBalance }}</span>
+        </dd>
+        <dt><span>Transaction Type</span></dt>
+        <dd>
+          <div *ngIf="employeeAccount.transactionType">
+            <a [routerLink]="['/transaction-type', employeeAccount.transactionType.id, 'view']">{{ employeeAccount.transactionType.id }}</a>
+          </div>
+        </dd>
+        <dt><span>Merchant</span></dt>
+        <dd>
+          <div *ngIf="employeeAccount.merchant">
+            <a [routerLink]="['/merchant', employeeAccount.merchant.id, 'view']">{{ employeeAccount.merchant.id }}</a>
+          </div>
+        </dd>
+        <dt><span>Employee</span></dt>
+        <dd>
+          <div *ngIf="employeeAccount.employee">
+            <a [routerLink]="['/employee', employeeAccount.employee.id, 'view']">{{ employeeAccount.employee.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/employee-account', employeeAccount.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,11 @@
+id;transaction_date;transaction_description;transaction_amount_dr;transaction_amount_cr;transaction_balance
+1;2022-11-09;flexibility;66603;60780;5211
+2;2022-11-08;copying transitional;6124;15451;67208
+3;2022-11-09;Bolivar;61534;82484;21412
+4;2022-11-08;Garden Facilitator engineer;94534;11568;74129
+5;2022-11-08;Maine Vanuatu reboot;6701;4739;73750
+6;2022-11-08;SMTP withdrawal Account;5813;22558;84551
+7;2022-11-08;Solutions multi-byte deposit;50203;87079;34145
+8;2022-11-08;Salad;2727;96245;57944
+9;2022-11-09;alarm intranet bluetooth;13540;87519;38265
+10;2022-11-08;panel TCP;11569;32599;84897

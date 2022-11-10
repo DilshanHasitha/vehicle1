@@ -1,0 +1,52 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="employeeAccountBalance">
+      <h2 data-cy="employeeAccountBalanceDetailsHeading"><span>Employee Account Balance</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ employeeAccountBalance.id }}</span>
+        </dd>
+        <dt><span>Balance</span></dt>
+        <dd>
+          <span>{{ employeeAccountBalance.balance }}</span>
+        </dd>
+        <dt><span>Employee</span></dt>
+        <dd>
+          <div *ngIf="employeeAccountBalance.employee">
+            <a [routerLink]="['/employee', employeeAccountBalance.employee.id, 'view']">{{ employeeAccountBalance.employee.id }}</a>
+          </div>
+        </dd>
+        <dt><span>Merchant</span></dt>
+        <dd>
+          <div *ngIf="employeeAccountBalance.merchant">
+            <a [routerLink]="['/merchant', employeeAccountBalance.merchant.id, 'view']">{{ employeeAccountBalance.merchant.id }}</a>
+          </div>
+        </dd>
+        <dt><span>Transaction Type</span></dt>
+        <dd>
+          <div *ngIf="employeeAccountBalance.transactionType">
+            <a [routerLink]="['/transaction-type', employeeAccountBalance.transactionType.id, 'view']">{{
+              employeeAccountBalance.transactionType.id
+            }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/employee-account-balance', employeeAccountBalance.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

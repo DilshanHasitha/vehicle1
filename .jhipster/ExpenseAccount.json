@@ -1,0 +1,57 @@
+{
+  "applications": "*",
+  "changelogDate": "20221109062543",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "expense_account",
+  "fields": [
+    {
+      "fieldName": "transactionDate",
+      "fieldType": "LocalDate",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "transactionDescription",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "transactionAmountDR",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "transactionAmountCR",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "transactionBalance",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": true,
+  "name": "ExpenseAccount",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "transactionType",
+      "relationshipName": "transactionType",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "merchant",
+      "relationshipName": "merchant",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "expense",
+      "relationshipName": "expense",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "service": "serviceClass"
+}
