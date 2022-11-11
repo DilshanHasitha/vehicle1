@@ -2,6 +2,8 @@ package com.mycompany.myapp.service;
 
 import com.mycompany.myapp.domain.CashBook;
 import com.mycompany.myapp.repository.CashBookRepository;
+import com.mycompany.myapp.service.dto.RequestTransDTO;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,6 +92,12 @@ public class CashBookService {
     public Page<CashBook> findAll(Pageable pageable) {
         log.debug("Request to get all CashBooks");
         return cashBookRepository.findAll(pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<List<CashBook>> findAllByDate(RequestTransDTO requestTransDTO) {
+        log.debug("Request to get all CashBooks");
+        return cashBookRepository.findAllByMerchant_CodeAndTransactionDate(requestTransDTO.getMerchantCode(), requestTransDTO.getDate());
     }
 
     /**

@@ -5,6 +5,8 @@ import com.mycompany.myapp.repository.ExpenseAccountRepository;
 import com.mycompany.myapp.service.ExpenseAccountQueryService;
 import com.mycompany.myapp.service.ExpenseAccountService;
 import com.mycompany.myapp.service.criteria.ExpenseAccountCriteria;
+import com.mycompany.myapp.service.dto.RequestTransDTO;
+import com.mycompany.myapp.service.dto.TransactionDTO;
 import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -204,5 +206,12 @@ public class ExpenseAccountResource {
             .noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
             .build();
+    }
+
+    @PostMapping("/Transaction")
+    public ResponseEntity<List<TransactionDTO>> transfer(@Valid @RequestBody RequestTransDTO requestTransDTO) throws URISyntaxException {
+        log.debug("REST request for a Mobile Bill Settlement : {}", requestTransDTO);
+        List<TransactionDTO> transactions = expenseAccountService.getTransaction(requestTransDTO);
+        return ResponseEntity.ok().body(transactions);
     }
 }

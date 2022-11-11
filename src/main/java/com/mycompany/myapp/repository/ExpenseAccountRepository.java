@@ -1,9 +1,8 @@
 package com.mycompany.myapp.repository;
 
-import com.mycompany.myapp.domain.CashBookBalance;
-import com.mycompany.myapp.domain.EmployeeAccountBalance;
-import com.mycompany.myapp.domain.ExpenseAccount;
-import com.mycompany.myapp.domain.ExpenseAccountBalance;
+import com.mycompany.myapp.domain.*;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
@@ -13,4 +12,10 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface ExpenseAccountRepository extends JpaRepository<ExpenseAccount, Long>, JpaSpecificationExecutor<ExpenseAccount> {}
+public interface ExpenseAccountRepository extends JpaRepository<ExpenseAccount, Long>, JpaSpecificationExecutor<ExpenseAccount> {
+    Optional<List<ExpenseAccount>> findAllByMerchant_CodeAndTransactionDateAndExpense_ExpenseCode(
+        String merchantCode,
+        LocalDate date,
+        String vehicle
+    );
+}

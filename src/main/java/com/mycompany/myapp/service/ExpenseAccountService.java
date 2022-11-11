@@ -1,12 +1,15 @@
 package com.mycompany.myapp.service;
 
-import com.mycompany.myapp.domain.CashBook;
-import com.mycompany.myapp.domain.CashBookBalance;
-import com.mycompany.myapp.domain.ExpenseAccount;
-import com.mycompany.myapp.domain.ExpenseAccountBalance;
+import com.mycompany.myapp.domain.*;
 import com.mycompany.myapp.repository.CashBookBalanceRepository;
 import com.mycompany.myapp.repository.ExpenseAccountBalanceRepository;
 import com.mycompany.myapp.repository.ExpenseAccountRepository;
+import com.mycompany.myapp.repository.VehicleRepository;
+import com.mycompany.myapp.service.dto.RequestTransDTO;
+import com.mycompany.myapp.service.dto.TransactionDTO;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,13 +39,18 @@ public class ExpenseAccountService {
 
     private final ExpenseAccountBalanceRepository expenseAccountBalanceRepository;
 
+    private final VehicleService vehicleService;
+    private final VehicleRepository vehicleRepository;
+
     public ExpenseAccountService(
         ExpenseAccountRepository expenseAccountRepository,
         CashBookService cashBookService,
         CashBookBalanceRepository cashBookBalanceRepository,
         CashBookBalanceService cashBookBalanceService,
         ExpenseAccountBalanceService expenseAccountBalanceService,
-        ExpenseAccountBalanceRepository expenseAccountBalanceRepository
+        ExpenseAccountBalanceRepository expenseAccountBalanceRepository,
+        VehicleService vehicleService,
+        VehicleRepository vehicleRepository
     ) {
         this.expenseAccountRepository = expenseAccountRepository;
         this.cashBookService = cashBookService;
@@ -50,6 +58,8 @@ public class ExpenseAccountService {
         this.cashBookBalanceService = cashBookBalanceService;
         this.expenseAccountBalanceService = expenseAccountBalanceService;
         this.expenseAccountBalanceRepository = expenseAccountBalanceRepository;
+        this.vehicleService = vehicleService;
+        this.vehicleRepository = vehicleRepository;
     }
 
     /**
@@ -111,6 +121,49 @@ public class ExpenseAccountService {
     public ExpenseAccount update(ExpenseAccount expenseAccount) {
         log.debug("Request to update ExpenseAccount : {}", expenseAccount);
         return expenseAccountRepository.save(expenseAccount);
+    }
+
+    public List<TransactionDTO> getTransaction(RequestTransDTO requestTransDTO) {
+        log.debug("Request to update ExpenseAccount : {}", requestTransDTO);
+        List<Vehicle> vehicles = vehicleRepository.findAllByMerchant_Code(requestTransDTO.getMerchantCode()).get();
+
+        List<TransactionDTO> transactions = new ArrayList<>();
+        for (Vehicle vehicle : vehicles) {
+            if (
+                expenseAccountRepository
+                    .findAllByMerchant_CodeAndTransactionDateAndExpense_ExpenseCode(
+                        requestTransDTO.getMerchantCode(),
+                        requestTransDTO.getDate(),
+                        vehicle.getExpenceCode()
+                    )
+                    .isPresent()
+            ) {
+                List<ExpenseAccount> expenseAccounts = expenseAccountRepository
+                    .findAllByMerchant_CodeAndTransactionDateAndExpense_ExpenseCode(
+                        requestTransDTO.getMerchantCode(),
+                        requestTransDTO.getDate(),
+                        vehicle.getExpenceCode()
+                    )
+                    .get();
+                TransactionDTO trn = new TransactionDTO();
+
+                if (expenseAccounts.size() > 0) {
+                    BigDecimal cr = BigDecimal.ZERO;
+                    BigDecimal dr = BigDecimal.ZERO;
+                    for (ExpenseAccount expenseAccountDetails : expenseAccounts) {
+                        cr = cr.add(expenseAccountDetails.getTransactionAmountDR());
+                        dr = dr.add(expenseAccountDetails.getTransactionAmountCR());
+                    }
+                    trn.setCr(cr);
+                    trn.setDr(dr);
+                    trn.setDate(requestTransDTO.getDate());
+                    trn.setVehicleNo(vehicle.getExpenceCode());
+
+                    transactions.add(trn);
+                }
+            }
+        }
+        return transactions;
     }
 
     /**
