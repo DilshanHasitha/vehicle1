@@ -1,5 +1,6 @@
 import { IUser } from 'app/entities/user/user.model';
 import { IEmployeeType } from 'app/entities/employee-type/employee-type.model';
+import { IVehicle } from 'app/entities/vehicle/vehicle.model';
 
 export interface IEmployee {
   id: number;
@@ -16,6 +17,7 @@ export interface IEmployee {
   salary?: number | null;
   user?: Pick<IUser, 'id'> | null;
   type?: Pick<IEmployeeType, 'id'> | null;
+  vehicles?: Pick<IVehicle, 'id'>[] | null;
 }
 
 export type NewEmployee = Omit<IEmployee, 'id'> & { id: null };

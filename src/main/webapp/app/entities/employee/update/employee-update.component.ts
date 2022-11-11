@@ -11,6 +11,8 @@ import { IUser } from 'app/entities/user/user.model';
 import { UserService } from 'app/entities/user/user.service';
 import { IEmployeeType } from 'app/entities/employee-type/employee-type.model';
 import { EmployeeTypeService } from 'app/entities/employee-type/service/employee-type.service';
+import { IVehicle } from 'app/entities/vehicle/vehicle.model';
+import { VehicleService } from 'app/entities/vehicle/service/vehicle.service';
 
 @Component({
   selector: 'jhi-employee-update',
@@ -22,6 +24,7 @@ export class EmployeeUpdateComponent implements OnInit {
 
   usersSharedCollection: IUser[] = [];
   employeeTypesSharedCollection: IEmployeeType[] = [];
+  vehiclesSharedCollection: IVehicle[] = [];
 
   editForm: EmployeeFormGroup = this.employeeFormService.createEmployeeFormGroup();
 
@@ -30,6 +33,7 @@ export class EmployeeUpdateComponent implements OnInit {
     protected employeeFormService: EmployeeFormService,
     protected userService: UserService,
     protected employeeTypeService: EmployeeTypeService,
+    protected vehicleService: VehicleService,
     protected activatedRoute: ActivatedRoute
   ) {}
 
@@ -37,6 +41,8 @@ export class EmployeeUpdateComponent implements OnInit {
 
   compareEmployeeType = (o1: IEmployeeType | null, o2: IEmployeeType | null): boolean =>
     this.employeeTypeService.compareEmployeeType(o1, o2);
+
+  compareVehicle = (o1: IVehicle | null, o2: IVehicle | null): boolean => this.vehicleService.compareVehicle(o1, o2);
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ employee }) => {
@@ -91,6 +97,10 @@ export class EmployeeUpdateComponent implements OnInit {
       this.employeeTypesSharedCollection,
       employee.type
     );
+    this.vehiclesSharedCollection = this.vehicleService.addVehicleToCollectionIfMissing<IVehicle>(
+      this.vehiclesSharedCollection,
+      ...(employee.vehicles ?? [])
+    );
   }
 
   protected loadRelationshipsOptions(): void {
@@ -109,5 +119,15 @@ export class EmployeeUpdateComponent implements OnInit {
         )
       )
       .subscribe((employeeTypes: IEmployeeType[]) => (this.employeeTypesSharedCollection = employeeTypes));
+
+    this.vehicleService
+      .query()
+      .pipe(map((res: HttpResponse<IVehicle[]>) => res.body ?? []))
+      .pipe(
+        map((vehicles: IVehicle[]) =>
+          this.vehicleService.addVehicleToCollectionIfMissing<IVehicle>(vehicles, ...(this.employee?.vehicles ?? []))
+        )
+      )
+      .subscribe((vehicles: IVehicle[]) => (this.vehiclesSharedCollection = vehicles));
   }
 }

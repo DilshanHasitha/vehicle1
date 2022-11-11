@@ -76,6 +76,14 @@
       "otherEntityRelationshipName": "employee",
       "relationshipName": "type",
       "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityField": "id",
+      "otherEntityName": "vehicle",
+      "otherEntityRelationshipName": "employee",
+      "ownerSide": true,
+      "relationshipName": "vehicle",
+      "relationshipType": "many-to-many"
     }
   ],
   "service": "serviceClass"

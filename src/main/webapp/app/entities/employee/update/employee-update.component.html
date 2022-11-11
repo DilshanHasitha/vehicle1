@@ -110,6 +110,21 @@
             </option>
           </select>
         </div>
+
+        <div class="row mb-3">
+          <label for="field_vehicles">Vehicle</label>
+          <select
+            class="form-control"
+            id="field_vehicles"
+            data-cy="vehicle"
+            multiple
+            name="vehicles"
+            formControlName="vehicles"
+            [compareWith]="compareVehicle"
+          >
+            <option [ngValue]="vehicleOption" *ngFor="let vehicleOption of vehiclesSharedCollection">{{ vehicleOption.id }}</option>
+          </select>
+        </div>
       </div>
 
       <div>

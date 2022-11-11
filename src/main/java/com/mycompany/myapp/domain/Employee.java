@@ -74,6 +74,16 @@ public class Employee implements Serializable {
     @JsonIgnoreProperties(value = { "employees" }, allowSetters = true)
     private EmployeeType type;
 
+    @ManyToMany
+    @JoinTable(
+        name = "rel_employee__vehicle",
+        joinColumns = @JoinColumn(name = "employee_id"),
+        inverseJoinColumns = @JoinColumn(name = "vehicle_id")
+    )
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "merchant" }, allowSetters = true)
+    private Set<Vehicle> vehicles = new HashSet<>();
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
     public Long getId() {
@@ -286,6 +296,29 @@ public class Employee implements Serializable {
 
     public Employee type(EmployeeType employeeType) {
         this.setType(employeeType);
+        return this;
+    }
+
+    public Set<Vehicle> getVehicles() {
+        return this.vehicles;
+    }
+
+    public void setVehicles(Set<Vehicle> vehicles) {
+        this.vehicles = vehicles;
+    }
+
+    public Employee vehicles(Set<Vehicle> vehicles) {
+        this.setVehicles(vehicles);
+        return this;
+    }
+
+    public Employee addVehicle(Vehicle vehicle) {
+        this.vehicles.add(vehicle);
+        return this;
+    }
+
+    public Employee removeVehicle(Vehicle vehicle) {
+        this.vehicles.remove(vehicle);
         return this;
     }
 

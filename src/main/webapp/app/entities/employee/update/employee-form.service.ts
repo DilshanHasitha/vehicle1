@@ -14,7 +14,7 @@ type PartialWithRequiredKeyOf<T extends { id: unknown }> = Partial<Omit<T, 'id'>
  */
 type EmployeeFormGroupInput = IEmployee | PartialWithRequiredKeyOf<NewEmployee>;
 
-type EmployeeFormDefaults = Pick<NewEmployee, 'id' | 'isActive'>;
+type EmployeeFormDefaults = Pick<NewEmployee, 'id' | 'isActive' | 'vehicles'>;
 
 type EmployeeFormGroupContent = {
   id: FormControl<IEmployee['id'] | NewEmployee['id']>;
@@ -31,6 +31,7 @@ type EmployeeFormGroupContent = {
   salary: FormControl<IEmployee['salary']>;
   user: FormControl<IEmployee['user']>;
   type: FormControl<IEmployee['type']>;
+  vehicles: FormControl<IEmployee['vehicles']>;
 };
 
 export type EmployeeFormGroup = FormGroup<EmployeeFormGroupContent>;
@@ -67,6 +68,7 @@ export class EmployeeFormService {
       salary: new FormControl(employeeRawValue.salary),
       user: new FormControl(employeeRawValue.user),
       type: new FormControl(employeeRawValue.type),
+      vehicles: new FormControl(employeeRawValue.vehicles ?? []),
     });
   }
 
@@ -88,6 +90,7 @@ export class EmployeeFormService {
     return {
       id: null,
       isActive: false,
+      vehicles: [],
     };
   }
 }

@@ -19,5 +19,17 @@
                                  constraintName="fk_employee__type_id"
                                  referencedColumnNames="id"
                                  referencedTableName="employee_type"/>
+
+        <addForeignKeyConstraint baseColumnNames="employee_id"
+                                 baseTableName="rel_employee__vehicle"
+                                 constraintName="fk_rel_employee__vehicle__employee_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="employee"/>
+
+        <addForeignKeyConstraint baseColumnNames="vehicle_id"
+                                 baseTableName="rel_employee__vehicle"
+                                 constraintName="fk_rel_employee__vehicle__vehicle_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="vehicle"/>
     </changeSet>
 </databaseChangeLog>

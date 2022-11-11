@@ -5,7 +5,10 @@ import com.mycompany.myapp.repository.CashBookRepository;
 import com.mycompany.myapp.service.CashBookQueryService;
 import com.mycompany.myapp.service.CashBookService;
 import com.mycompany.myapp.service.criteria.CashBookCriteria;
+import com.mycompany.myapp.service.dto.RequestTransDTO;
+import com.mycompany.myapp.service.dto.TransactionDTO;
 import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -203,5 +206,26 @@ public class CashBookResource {
             .noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
             .build();
+    }
+
+    @PostMapping("/getCashBookByDate")
+    public ResponseEntity<TransactionDTO> findAllByDate(@Valid @RequestBody RequestTransDTO requestTransDTO) throws URISyntaxException {
+        log.debug("REST request for a Mobile Bill Settlement : {}", requestTransDTO);
+        List<CashBook> cashBooks = cashBookService.findAllByDate(requestTransDTO).get();
+
+        BigDecimal cr = BigDecimal.ZERO;
+        BigDecimal dr = BigDecimal.ZERO;
+
+        TransactionDTO transactions = new TransactionDTO();
+        for (CashBook cashBook : cashBooks) {
+            cr = cr.add(cashBook.getTransactionAmountCR());
+            dr = dr.add(cashBook.getTransactionAmountDR());
+        }
+        transactions.setDr(dr);
+        transactions.setCr(cr);
+        transactions.setDate(requestTransDTO.getDate());
+        transactions.setVehicleNo("all");
+
+        return ResponseEntity.ok().body(transactions);
     }
 }

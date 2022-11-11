@@ -14,6 +14,8 @@ import { IUser } from 'app/entities/user/user.model';
 import { UserService } from 'app/entities/user/user.service';
 import { IEmployeeType } from 'app/entities/employee-type/employee-type.model';
 import { EmployeeTypeService } from 'app/entities/employee-type/service/employee-type.service';
+import { IVehicle } from 'app/entities/vehicle/vehicle.model';
+import { VehicleService } from 'app/entities/vehicle/service/vehicle.service';
 
 import { EmployeeUpdateComponent } from './employee-update.component';
 
@@ -25,6 +27,7 @@ describe('Employee Management Update Component', () => {
   let employeeService: EmployeeService;
   let userService: UserService;
   let employeeTypeService: EmployeeTypeService;
+  let vehicleService: VehicleService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -49,6 +52,7 @@ describe('Employee Management Update Component', () => {
     employeeService = TestBed.inject(EmployeeService);
     userService = TestBed.inject(UserService);
     employeeTypeService = TestBed.inject(EmployeeTypeService);
+    vehicleService = TestBed.inject(VehicleService);
 
     comp = fixture.componentInstance;
   });
@@ -98,18 +102,43 @@ describe('Employee Management Update Component', () => {
       expect(comp.employeeTypesSharedCollection).toEqual(expectedCollection);
     });
 
+    it('Should call Vehicle query and add missing value', () => {
+      const employee: IEmployee = { id: 456 };
+      const vehicles: IVehicle[] = [{ id: 45518 }];
+      employee.vehicles = vehicles;
+
+      const vehicleCollection: IVehicle[] = [{ id: 3441 }];
+      jest.spyOn(vehicleService, 'query').mockReturnValue(of(new HttpResponse({ body: vehicleCollection })));
+      const additionalVehicles = [...vehicles];
+      const expectedCollection: IVehicle[] = [...additionalVehicles, ...vehicleCollection];
+      jest.spyOn(vehicleService, 'addVehicleToCollectionIfMissing').mockReturnValue(expectedCollection);
+
+      activatedRoute.data = of({ employee });
+      comp.ngOnInit();
+
+      expect(vehicleService.query).toHaveBeenCalled();
+      expect(vehicleService.addVehicleToCollectionIfMissing).toHaveBeenCalledWith(
+        vehicleCollection,
+        ...additionalVehicles.map(expect.objectContaining)
+      );
+      expect(comp.vehiclesSharedCollection).toEqual(expectedCollection);
+    });
+
     it('Should update editForm', () => {
       const employee: IEmployee = { id: 456 };
       const user: IUser = { id: 66698 };
       employee.user = user;
       const type: IEmployeeType = { id: 90077 };
       employee.type = type;
+      const vehicle: IVehicle = { id: 573 };
+      employee.vehicles = [vehicle];
 
       activatedRoute.data = of({ employee });
       comp.ngOnInit();
 
       expect(comp.usersSharedCollection).toContain(user);
       expect(comp.employeeTypesSharedCollection).toContain(type);
+      expect(comp.vehiclesSharedCollection).toContain(vehicle);
       expect(comp.employee).toEqual(employee);
     });
   });
@@ -200,6 +229,16 @@ describe('Employee Management Update Component', () => {
         jest.spyOn(employeeTypeService, 'compareEmployeeType');
         comp.compareEmployeeType(entity, entity2);
         expect(employeeTypeService.compareEmployeeType).toHaveBeenCalledWith(entity, entity2);
+      });
+    });
+
+    describe('compareVehicle', () => {
+      it('Should forward to vehicleService', () => {
+        const entity = { id: 123 };
+        const entity2 = { id: 456 };
+        jest.spyOn(vehicleService, 'compareVehicle');
+        comp.compareVehicle(entity, entity2);
+        expect(vehicleService.compareVehicle).toHaveBeenCalledWith(entity, entity2);
       });
     });
   });

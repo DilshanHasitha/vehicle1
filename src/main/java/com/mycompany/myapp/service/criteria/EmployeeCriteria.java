@@ -51,6 +51,8 @@ public class EmployeeCriteria implements Serializable, Criteria {
 
     private LongFilter typeId;
 
+    private LongFilter vehicleId;
+
     private Boolean distinct;
 
     public EmployeeCriteria() {}
@@ -71,6 +73,7 @@ public class EmployeeCriteria implements Serializable, Criteria {
         this.userId = other.userId == null ? null : other.userId.copy();
         this.imagesId = other.imagesId == null ? null : other.imagesId.copy();
         this.typeId = other.typeId == null ? null : other.typeId.copy();
+        this.vehicleId = other.vehicleId == null ? null : other.vehicleId.copy();
         this.distinct = other.distinct;
     }
 
@@ -304,6 +307,21 @@ public class EmployeeCriteria implements Serializable, Criteria {
         this.typeId = typeId;
     }
 
+    public LongFilter getVehicleId() {
+        return vehicleId;
+    }
+
+    public LongFilter vehicleId() {
+        if (vehicleId == null) {
+            vehicleId = new LongFilter();
+        }
+        return vehicleId;
+    }
+
+    public void setVehicleId(LongFilter vehicleId) {
+        this.vehicleId = vehicleId;
+    }
+
     public Boolean getDistinct() {
         return distinct;
     }
@@ -337,6 +355,7 @@ public class EmployeeCriteria implements Serializable, Criteria {
             Objects.equals(userId, that.userId) &&
             Objects.equals(imagesId, that.imagesId) &&
             Objects.equals(typeId, that.typeId) &&
+            Objects.equals(vehicleId, that.vehicleId) &&
             Objects.equals(distinct, that.distinct)
         );
     }
@@ -359,6 +378,7 @@ public class EmployeeCriteria implements Serializable, Criteria {
             userId,
             imagesId,
             typeId,
+            vehicleId,
             distinct
         );
     }
@@ -382,6 +402,7 @@ public class EmployeeCriteria implements Serializable, Criteria {
             (userId != null ? "userId=" + userId + ", " : "") +
             (imagesId != null ? "imagesId=" + imagesId + ", " : "") +
             (typeId != null ? "typeId=" + typeId + ", " : "") +
+            (vehicleId != null ? "vehicleId=" + vehicleId + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";
     }
