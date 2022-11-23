@@ -125,6 +125,21 @@
             <option [ngValue]="vehicleOption" *ngFor="let vehicleOption of vehiclesSharedCollection">{{ vehicleOption.id }}</option>
           </select>
         </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_merchant">Merchant</label>
+          <select
+            class="form-control"
+            id="field_merchant"
+            data-cy="merchant"
+            name="merchant"
+            formControlName="merchant"
+            [compareWith]="compareMerchant"
+          >
+            <option [ngValue]="null"></option>
+            <option [ngValue]="merchantOption" *ngFor="let merchantOption of merchantsSharedCollection">{{ merchantOption.id }}</option>
+          </select>
+        </div>
       </div>
 
       <div>

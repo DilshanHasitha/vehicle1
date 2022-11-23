@@ -11,6 +11,7 @@ import com.mycompany.myapp.IntegrationTest;
 import com.mycompany.myapp.domain.Employee;
 import com.mycompany.myapp.domain.EmployeeType;
 import com.mycompany.myapp.domain.Images;
+import com.mycompany.myapp.domain.Merchant;
 import com.mycompany.myapp.domain.User;
 import com.mycompany.myapp.domain.Vehicle;
 import com.mycompany.myapp.repository.EmployeeRepository;
@@ -1120,6 +1121,29 @@ class EmployeeResourceIT {
 
         // Get all the employeeList where vehicle equals to (vehicleId + 1)
         defaultEmployeeShouldNotBeFound("vehicleId.equals=" + (vehicleId + 1));
+    }
+
+    @Test
+    @Transactional
+    void getAllEmployeesByMerchantIsEqualToSomething() throws Exception {
+        Merchant merchant;
+        if (TestUtil.findAll(em, Merchant.class).isEmpty()) {
+            employeeRepository.saveAndFlush(employee);
+            merchant = MerchantResourceIT.createEntity(em);
+        } else {
+            merchant = TestUtil.findAll(em, Merchant.class).get(0);
+        }
+        em.persist(merchant);
+        em.flush();
+        employee.setMerchant(merchant);
+        employeeRepository.saveAndFlush(employee);
+        Long merchantId = merchant.getId();
+
+        // Get all the employeeList where merchant equals to merchantId
+        defaultEmployeeShouldBeFound("merchantId.equals=" + merchantId);
+
+        // Get all the employeeList where merchant equals to (merchantId + 1)
+        defaultEmployeeShouldNotBeFound("merchantId.equals=" + (merchantId + 1));
     }
 
     /**

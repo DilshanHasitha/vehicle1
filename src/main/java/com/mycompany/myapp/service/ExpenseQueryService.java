@@ -1,14 +1,19 @@
 package com.mycompany.myapp.service;
 
+import static com.mycompany.myapp.security.AuthoritiesConstants.ADMIN;
+import static com.mycompany.myapp.security.AuthoritiesConstants.USER;
+
 import com.mycompany.myapp.domain.*; // for static metamodels
 import com.mycompany.myapp.domain.Expense;
+import com.mycompany.myapp.repository.EmployeeRepository;
 import com.mycompany.myapp.repository.ExpenseRepository;
+import com.mycompany.myapp.security.SecurityUtils;
 import com.mycompany.myapp.service.criteria.ExpenseCriteria;
 import java.util.List;
-import javax.persistence.criteria.JoinType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -28,9 +33,11 @@ public class ExpenseQueryService extends QueryService<Expense> {
     private final Logger log = LoggerFactory.getLogger(ExpenseQueryService.class);
 
     private final ExpenseRepository expenseRepository;
+    private final EmployeeRepository employeeRepository;
 
-    public ExpenseQueryService(ExpenseRepository expenseRepository) {
+    public ExpenseQueryService(ExpenseRepository expenseRepository, EmployeeRepository employeeRepository) {
         this.expenseRepository = expenseRepository;
+        this.employeeRepository = employeeRepository;
     }
 
     /**
@@ -51,12 +58,38 @@ public class ExpenseQueryService extends QueryService<Expense> {
      * @param page The page, which should be returned.
      * @return the matching entities.
      */
+
     @Transactional(readOnly = true)
     public Page<Expense> findByCriteria(ExpenseCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Expense> specification = createSpecification(criteria);
-        return expenseRepository.findAll(specification, page);
+        Page<Expense> filteredList = null;
+        if (SecurityUtils.hasCurrentUserThisAuthority(ADMIN)) {
+            filteredList = expenseRepository.findAll(specification, page);
+        } else if (SecurityUtils.hasCurrentUserThisAuthority(USER)) {
+            Employee employee = employeeRepository.findAllByUser_login(SecurityUtils.getCurrentUserLogin().get());
+            String expenseCode = employee.getVehicles().iterator().next().getExpenceCode();
+
+            if (
+                expenseRepository.findAllByExpenseCode(expenseCode).isPresent() &&
+                !expenseRepository.findAllByExpenseCode(expenseCode).get().isEmpty()
+            ) {
+                List<Expense> expenses = expenseRepository.findAllByExpenseCode(expenseCode).get();
+                filteredList = new PageImpl<>(expenses);
+            }
+            //            Page<Expense> supplierBasedItems = expenseRepository.findAll(employee.getVehicles().iterator().next(),page);
+            //            List<Items> itemsBasedOnSpec = itemsRepository.findAll(specification);
+            //            filteredList = CommonUtils.getRightUnion(itemsBasedOnSpec,supplierBasedItems,page,supplierBasedItems.getTotalElements());
+        }
+        return filteredList;
     }
+
+    //    @Transactional(readOnly = true)
+    //    public Page<Expense> findByCriteria(ExpenseCriteria criteria, Pageable page) {
+    //        log.debug("find by criteria : {}, page: {}", criteria, page);
+    //        final Specification<Expense> specification = createSpecification(criteria);
+    //        return expenseRepository.findAll(specification, page);
+    //    }
 
     /**
      * Return the number of matching entities in the database.

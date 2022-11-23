@@ -16,4 +16,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CashBookRepository extends JpaRepository<CashBook, Long>, JpaSpecificationExecutor<CashBook> {
     Optional<List<CashBook>> findAllByMerchant_CodeAndTransactionDate(String merchantCode, LocalDate date);
+    Optional<List<CashBook>> findAllByMerchant_Code(String merchantCode);
 }

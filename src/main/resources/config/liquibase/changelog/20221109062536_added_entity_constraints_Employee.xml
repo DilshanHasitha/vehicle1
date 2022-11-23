@@ -31,5 +31,11 @@
                                  constraintName="fk_rel_employee__vehicle__vehicle_id"
                                  referencedColumnNames="id"
                                  referencedTableName="vehicle"/>
+
+        <addForeignKeyConstraint baseColumnNames="merchant_id"
+                                 baseTableName="employee"
+                                 constraintName="fk_employee__merchant_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="merchant"/>
     </changeSet>
 </databaseChangeLog>

@@ -1,5 +1,6 @@
 package com.mycompany.myapp.repository;
 
+import com.mycompany.myapp.domain.Expense;
 import com.mycompany.myapp.domain.Merchant;
 import java.util.List;
 import java.util.Optional;
@@ -29,4 +30,6 @@ public interface MerchantRepository
     default Page<Merchant> findAllWithEagerRelationships(Pageable pageable) {
         return this.fetchBagRelationships(this.findAll(pageable));
     }
+
+    Merchant findOneByCode(String code);
 }

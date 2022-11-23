@@ -75,6 +75,12 @@
             >{{ last ? '' : ', ' }}
           </span>
         </dd>
+        <dt><span>Merchant</span></dt>
+        <dd>
+          <div *ngIf="employee.merchant">
+            <a [routerLink]="['/merchant', employee.merchant.id, 'view']">{{ employee.merchant.id }}</a>
+          </div>
+        </dd>
       </dl>
 
       <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">

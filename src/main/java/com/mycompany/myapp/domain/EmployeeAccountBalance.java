@@ -29,7 +29,7 @@ public class EmployeeAccountBalance implements Serializable {
     private BigDecimal balance;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "user", "images", "type" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "user", "images", "type", "vehicles", "merchant" }, allowSetters = true)
     private Employee employee;
 
     @ManyToOne

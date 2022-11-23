@@ -13,6 +13,8 @@ import { IEmployeeType } from 'app/entities/employee-type/employee-type.model';
 import { EmployeeTypeService } from 'app/entities/employee-type/service/employee-type.service';
 import { IVehicle } from 'app/entities/vehicle/vehicle.model';
 import { VehicleService } from 'app/entities/vehicle/service/vehicle.service';
+import { IMerchant } from 'app/entities/merchant/merchant.model';
+import { MerchantService } from 'app/entities/merchant/service/merchant.service';
 
 @Component({
   selector: 'jhi-employee-update',
@@ -25,6 +27,7 @@ export class EmployeeUpdateComponent implements OnInit {
   usersSharedCollection: IUser[] = [];
   employeeTypesSharedCollection: IEmployeeType[] = [];
   vehiclesSharedCollection: IVehicle[] = [];
+  merchantsSharedCollection: IMerchant[] = [];
 
   editForm: EmployeeFormGroup = this.employeeFormService.createEmployeeFormGroup();
 
@@ -34,6 +37,7 @@ export class EmployeeUpdateComponent implements OnInit {
     protected userService: UserService,
     protected employeeTypeService: EmployeeTypeService,
     protected vehicleService: VehicleService,
+    protected merchantService: MerchantService,
     protected activatedRoute: ActivatedRoute
   ) {}
 
@@ -43,6 +47,8 @@ export class EmployeeUpdateComponent implements OnInit {
     this.employeeTypeService.compareEmployeeType(o1, o2);
 
   compareVehicle = (o1: IVehicle | null, o2: IVehicle | null): boolean => this.vehicleService.compareVehicle(o1, o2);
+
+  compareMerchant = (o1: IMerchant | null, o2: IMerchant | null): boolean => this.merchantService.compareMerchant(o1, o2);
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ employee }) => {
@@ -101,6 +107,10 @@ export class EmployeeUpdateComponent implements OnInit {
       this.vehiclesSharedCollection,
       ...(employee.vehicles ?? [])
     );
+    this.merchantsSharedCollection = this.merchantService.addMerchantToCollectionIfMissing<IMerchant>(
+      this.merchantsSharedCollection,
+      employee.merchant
+    );
   }
 
   protected loadRelationshipsOptions(): void {
@@ -129,5 +139,15 @@ export class EmployeeUpdateComponent implements OnInit {
         )
       )
       .subscribe((vehicles: IVehicle[]) => (this.vehiclesSharedCollection = vehicles));
+
+    this.merchantService
+      .query()
+      .pipe(map((res: HttpResponse<IMerchant[]>) => res.body ?? []))
+      .pipe(
+        map((merchants: IMerchant[]) =>
+          this.merchantService.addMerchantToCollectionIfMissing<IMerchant>(merchants, this.employee?.merchant)
+        )
+      )
+      .subscribe((merchants: IMerchant[]) => (this.merchantsSharedCollection = merchants));
   }
 }

@@ -53,7 +53,7 @@ public class EmployeeAccount implements Serializable {
     private Merchant merchant;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "user", "images", "type" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "user", "images", "type", "vehicles", "merchant" }, allowSetters = true)
     private Employee employee;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

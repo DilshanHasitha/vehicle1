@@ -2,6 +2,7 @@ package com.mycompany.myapp.service;
 
 import com.mycompany.myapp.domain.Employee;
 import com.mycompany.myapp.repository.EmployeeRepository;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -130,5 +131,10 @@ public class EmployeeService {
     public void delete(Long id) {
         log.debug("Request to delete Employee : {}", id);
         employeeRepository.deleteById(id);
+    }
+
+    public List<Employee> findAllByMerchant_code(String merchantCode) {
+        log.debug("Request to get all Employees");
+        return employeeRepository.findAllByMerchant_Code(merchantCode);
     }
 }

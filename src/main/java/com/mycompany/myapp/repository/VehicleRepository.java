@@ -13,4 +13,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface VehicleRepository extends JpaRepository<Vehicle, Long>, JpaSpecificationExecutor<Vehicle> {
     Optional<List<Vehicle>> findAllByMerchant_Code(String code);
+    Optional<Vehicle> findOneByName(String name);
 }

@@ -118,6 +118,12 @@
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
+          <th scope="col" jhiSortBy="merchant.id">
+            <div class="d-flex">
+              <span>Merchant</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -143,6 +149,11 @@
           <td>
             <div *ngIf="employee.type">
               <a [routerLink]="['/employee-type', employee.type.id, 'view']">{{ employee.type.id }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="employee.merchant">
+              <a [routerLink]="['/merchant', employee.merchant.id, 'view']">{{ employee.merchant.id }}</a>
             </div>
           </td>
           <td class="text-end">

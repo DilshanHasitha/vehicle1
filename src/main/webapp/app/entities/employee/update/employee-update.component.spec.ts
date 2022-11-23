@@ -16,6 +16,8 @@ import { IEmployeeType } from 'app/entities/employee-type/employee-type.model';
 import { EmployeeTypeService } from 'app/entities/employee-type/service/employee-type.service';
 import { IVehicle } from 'app/entities/vehicle/vehicle.model';
 import { VehicleService } from 'app/entities/vehicle/service/vehicle.service';
+import { IMerchant } from 'app/entities/merchant/merchant.model';
+import { MerchantService } from 'app/entities/merchant/service/merchant.service';
 
 import { EmployeeUpdateComponent } from './employee-update.component';
 
@@ -28,6 +30,7 @@ describe('Employee Management Update Component', () => {
   let userService: UserService;
   let employeeTypeService: EmployeeTypeService;
   let vehicleService: VehicleService;
+  let merchantService: MerchantService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -53,6 +56,7 @@ describe('Employee Management Update Component', () => {
     userService = TestBed.inject(UserService);
     employeeTypeService = TestBed.inject(EmployeeTypeService);
     vehicleService = TestBed.inject(VehicleService);
+    merchantService = TestBed.inject(MerchantService);
 
     comp = fixture.componentInstance;
   });
@@ -124,6 +128,28 @@ describe('Employee Management Update Component', () => {
       expect(comp.vehiclesSharedCollection).toEqual(expectedCollection);
     });
 
+    it('Should call Merchant query and add missing value', () => {
+      const employee: IEmployee = { id: 456 };
+      const merchant: IMerchant = { id: 97567 };
+      employee.merchant = merchant;
+
+      const merchantCollection: IMerchant[] = [{ id: 67213 }];
+      jest.spyOn(merchantService, 'query').mockReturnValue(of(new HttpResponse({ body: merchantCollection })));
+      const additionalMerchants = [merchant];
+      const expectedCollection: IMerchant[] = [...additionalMerchants, ...merchantCollection];
+      jest.spyOn(merchantService, 'addMerchantToCollectionIfMissing').mockReturnValue(expectedCollection);
+
+      activatedRoute.data = of({ employee });
+      comp.ngOnInit();
+
+      expect(merchantService.query).toHaveBeenCalled();
+      expect(merchantService.addMerchantToCollectionIfMissing).toHaveBeenCalledWith(
+        merchantCollection,
+        ...additionalMerchants.map(expect.objectContaining)
+      );
+      expect(comp.merchantsSharedCollection).toEqual(expectedCollection);
+    });
+
     it('Should update editForm', () => {
       const employee: IEmployee = { id: 456 };
       const user: IUser = { id: 66698 };
@@ -132,6 +158,8 @@ describe('Employee Management Update Component', () => {
       employee.type = type;
       const vehicle: IVehicle = { id: 573 };
       employee.vehicles = [vehicle];
+      const merchant: IMerchant = { id: 52553 };
+      employee.merchant = merchant;
 
       activatedRoute.data = of({ employee });
       comp.ngOnInit();
@@ -139,6 +167,7 @@ describe('Employee Management Update Component', () => {
       expect(comp.usersSharedCollection).toContain(user);
       expect(comp.employeeTypesSharedCollection).toContain(type);
       expect(comp.vehiclesSharedCollection).toContain(vehicle);
+      expect(comp.merchantsSharedCollection).toContain(merchant);
       expect(comp.employee).toEqual(employee);
     });
   });
@@ -239,6 +268,16 @@ describe('Employee Management Update Component', () => {
         jest.spyOn(vehicleService, 'compareVehicle');
         comp.compareVehicle(entity, entity2);
         expect(vehicleService.compareVehicle).toHaveBeenCalledWith(entity, entity2);
+      });
+    });
+
+    describe('compareMerchant', () => {
+      it('Should forward to merchantService', () => {
+        const entity = { id: 123 };
+        const entity2 = { id: 456 };
+        jest.spyOn(merchantService, 'compareMerchant');
+        comp.compareMerchant(entity, entity2);
+        expect(merchantService.compareMerchant).toHaveBeenCalledWith(entity, entity2);
       });
     });
   });

@@ -18,4 +18,5 @@ public interface ExpenseAccountRepository extends JpaRepository<ExpenseAccount, 
         LocalDate date,
         String vehicle
     );
+    Optional<List<ExpenseAccount>> findAllByExpense_ExpenseCode(String expenseCode);
 }

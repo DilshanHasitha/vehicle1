@@ -47,7 +47,7 @@ public class Images implements Serializable {
     private String imageBlobContentType;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "user", "images", "type" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "user", "images", "type", "vehicles", "merchant" }, allowSetters = true)
     private Employee employee;
 
     @OneToMany(mappedBy = "images")

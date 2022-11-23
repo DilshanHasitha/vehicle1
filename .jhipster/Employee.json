@@ -84,6 +84,12 @@
       "ownerSide": true,
       "relationshipName": "vehicle",
       "relationshipType": "many-to-many"
+    },
+    {
+      "otherEntityField": "id",
+      "otherEntityName": "merchant",
+      "relationshipName": "merchant",
+      "relationshipType": "many-to-one"
     }
   ],
   "service": "serviceClass"

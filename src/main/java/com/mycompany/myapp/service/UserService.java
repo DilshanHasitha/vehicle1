@@ -2,15 +2,16 @@ package com.mycompany.myapp.service;
 
 import com.mycompany.myapp.config.Constants;
 import com.mycompany.myapp.domain.Authority;
+import com.mycompany.myapp.domain.Employee;
 import com.mycompany.myapp.domain.ExUser;
 import com.mycompany.myapp.domain.User;
 import com.mycompany.myapp.repository.AuthorityRepository;
+import com.mycompany.myapp.repository.EmployeeRepository;
 import com.mycompany.myapp.repository.UserRepository;
 import com.mycompany.myapp.security.AuthoritiesConstants;
 import com.mycompany.myapp.security.SecurityUtils;
 import com.mycompany.myapp.service.dto.AdminUserDTO;
 import com.mycompany.myapp.service.dto.UserDTO;
-import com.mycompany.myapp.web.rest.vm.ManagedUserVM;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -45,19 +46,25 @@ public class UserService {
     private final CacheManager cacheManager;
 
     private final ExUserService exUserService;
+    private final EmployeeRepository employeeRepository;
+    private final EmployeeService employeeService;
 
     public UserService(
         UserRepository userRepository,
         PasswordEncoder passwordEncoder,
         AuthorityRepository authorityRepository,
         CacheManager cacheManager,
-        ExUserService exUserService
+        ExUserService exUserService,
+        EmployeeRepository employeeRepository,
+        EmployeeService employeeService
     ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authorityRepository = authorityRepository;
         this.cacheManager = cacheManager;
         this.exUserService = exUserService;
+        this.employeeRepository = employeeRepository;
+        this.employeeService = employeeService;
     }
 
     public Optional<User> activateRegistration(String key) {
@@ -154,6 +161,18 @@ public class UserService {
         exUserService.save(exUser);
         this.clearUserCaches(newUser);
         log.debug("Created Information for User: {}", newUser);
+
+        Employee employee = new Employee();
+        employee.setUser(newUser);
+        employee.setFirstName(userDTO.getFirstName());
+        employee.setLastName(userDTO.getLastName());
+        employee.setCode(userDTO.getLastName());
+        employee.setEmail(userDTO.getEmail());
+        employee.setPhone(userDTO.getPhoneNumber());
+        employee.setAddressLine1("colombo");
+
+        employeeService.save(employee);
+
         return newUser;
     }
 

@@ -3,6 +3,7 @@ package com.mycompany.myapp.service;
 import com.mycompany.myapp.domain.CashBook;
 import com.mycompany.myapp.repository.CashBookRepository;
 import com.mycompany.myapp.service.dto.RequestTransDTO;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -97,7 +98,13 @@ public class CashBookService {
     @Transactional(readOnly = true)
     public Optional<List<CashBook>> findAllByDate(RequestTransDTO requestTransDTO) {
         log.debug("Request to get all CashBooks");
-        return cashBookRepository.findAllByMerchant_CodeAndTransactionDate(requestTransDTO.getMerchantCode(), requestTransDTO.getDate());
+        return cashBookRepository.findAllByMerchant_CodeAndTransactionDate(requestTransDTO.getMerchantCode(), LocalDate.now());
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<List<CashBook>> findAllCashBookDetailsByMerchantCode(RequestTransDTO requestTransDTO) {
+        log.debug("Request to get all CashBooks");
+        return cashBookRepository.findAllByMerchant_Code(requestTransDTO.getMerchantCode());
     }
 
     /**

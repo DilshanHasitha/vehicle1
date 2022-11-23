@@ -2,6 +2,7 @@ package com.mycompany.myapp.repository;
 
 import com.mycompany.myapp.domain.CashBook;
 import com.mycompany.myapp.domain.Employee;
+import com.mycompany.myapp.domain.User;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -14,8 +15,11 @@ import org.springframework.stereotype.Repository;
 /**
  * Spring Data JPA repository for the Employee entity.
  */
-@SuppressWarnings("unused")
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Long>, JpaSpecificationExecutor<Employee> {
-    Optional<List<Employee>> findAllByMerchant_Code(String merchantCode);
+    List<Employee> findAllByMerchant_Code(String merchantCode);
+
+    Optional<Employee> findOneByPhone(String phone);
+
+    Employee findAllByUser_login(String user);
 }

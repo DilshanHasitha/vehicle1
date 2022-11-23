@@ -1,15 +1,25 @@
 package com.mycompany.myapp.web.rest;
 
+import com.mycompany.myapp.domain.Expense;
 import com.mycompany.myapp.domain.ExpenseAccount;
+import com.mycompany.myapp.domain.Merchant;
 import com.mycompany.myapp.repository.ExpenseAccountRepository;
+import com.mycompany.myapp.repository.ExpenseRepository;
+import com.mycompany.myapp.repository.MerchantRepository;
+import com.mycompany.myapp.security.SecurityUtils;
 import com.mycompany.myapp.service.ExpenseAccountQueryService;
 import com.mycompany.myapp.service.ExpenseAccountService;
 import com.mycompany.myapp.service.criteria.ExpenseAccountCriteria;
+import com.mycompany.myapp.service.dto.AddExpenseDTO;
 import com.mycompany.myapp.service.dto.RequestTransDTO;
 import com.mycompany.myapp.service.dto.TransactionDTO;
+import com.mycompany.myapp.service.dto.TrnByExpenseCodeDTO;
 import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -48,14 +58,21 @@ public class ExpenseAccountResource {
 
     private final ExpenseAccountQueryService expenseAccountQueryService;
 
+    private final ExpenseRepository expenseRepository;
+    private final MerchantRepository merchantRepository;
+
     public ExpenseAccountResource(
         ExpenseAccountService expenseAccountService,
         ExpenseAccountRepository expenseAccountRepository,
-        ExpenseAccountQueryService expenseAccountQueryService
+        ExpenseAccountQueryService expenseAccountQueryService,
+        ExpenseRepository expenseRepository,
+        MerchantRepository merchantRepository
     ) {
         this.expenseAccountService = expenseAccountService;
         this.expenseAccountRepository = expenseAccountRepository;
         this.expenseAccountQueryService = expenseAccountQueryService;
+        this.expenseRepository = expenseRepository;
+        this.merchantRepository = merchantRepository;
     }
 
     /**
@@ -213,5 +230,59 @@ public class ExpenseAccountResource {
         log.debug("REST request for a Mobile Bill Settlement : {}", requestTransDTO);
         List<TransactionDTO> transactions = expenseAccountService.getTransaction(requestTransDTO);
         return ResponseEntity.ok().body(transactions);
+    }
+
+    @PostMapping("/addExpenses")
+    public ResponseEntity<ExpenseAccount> addExpenses(@Valid @RequestBody AddExpenseDTO expenseAccount) throws URISyntaxException {
+        ExpenseAccount expenseAccount1 = new ExpenseAccount();
+        BigDecimal cr = BigDecimal.ZERO;
+        BigDecimal dr = BigDecimal.ZERO;
+        if (expenseAccount.getCr() != null) {
+            cr = expenseAccount.getCr();
+        }
+        if (expenseAccount.getDr() != null) {
+            dr = expenseAccount.getDr();
+        }
+
+        Expense expense = expenseRepository.findOneByExpenseCode(expenseAccount.getExpenseCode());
+        Merchant merchant = merchantRepository.findOneByCode(expenseAccount.getMerchantCode());
+
+        expenseAccount1.setTransactionAmountCR(cr);
+        expenseAccount1.setTransactionAmountDR(dr);
+        expenseAccount1.setTransactionBalance(expenseAccount.getAmount());
+        expenseAccount1.setTransactionDescription(
+            expenseAccount.getDescription() +
+            "" +
+            "-" +
+            expenseAccount.getExpenseCode() +
+            "" +
+            "-" +
+            SecurityUtils.getCurrentUserLogin().get()
+        );
+        expenseAccount1.setExpense(expense);
+        expenseAccount1.setMerchant(merchant);
+        expenseAccount1.setTransactionDate(LocalDate.now());
+
+        ExpenseAccount result = expenseAccountService.save(expenseAccount1);
+        return ResponseEntity
+            .created(new URI("/api/expense-accounts/" + result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
+            .body(result);
+    }
+
+    @PostMapping("/getTrnByExpenseCode")
+    public ResponseEntity<List<ExpenseAccount>> getTrnByExpenseCode(@Valid @RequestBody TrnByExpenseCodeDTO trnByExpenseCodeDTO)
+        throws URISyntaxException {
+        log.debug("REST request for a Mobile Bill Settlement : {}", trnByExpenseCodeDTO);
+        List<ExpenseAccount> transactions = new ArrayList<>();
+        if (
+            expenseAccountRepository.findAllByExpense_ExpenseCode(trnByExpenseCodeDTO.getExpenseCode()).isPresent() &&
+            !expenseAccountRepository.findAllByExpense_ExpenseCode(trnByExpenseCodeDTO.getExpenseCode()).isEmpty()
+        ) {
+            transactions = expenseAccountRepository.findAllByExpense_ExpenseCode(trnByExpenseCodeDTO.getExpenseCode()).get();
+            return ResponseEntity.ok().body(transactions);
+        } else {
+            return ResponseEntity.ok().body(transactions);
+        }
     }
 }

@@ -32,6 +32,7 @@ type EmployeeFormGroupContent = {
   user: FormControl<IEmployee['user']>;
   type: FormControl<IEmployee['type']>;
   vehicles: FormControl<IEmployee['vehicles']>;
+  merchant: FormControl<IEmployee['merchant']>;
 };
 
 export type EmployeeFormGroup = FormGroup<EmployeeFormGroupContent>;
@@ -69,6 +70,7 @@ export class EmployeeFormService {
       user: new FormControl(employeeRawValue.user),
       type: new FormControl(employeeRawValue.type),
       vehicles: new FormControl(employeeRawValue.vehicles ?? []),
+      merchant: new FormControl(employeeRawValue.merchant),
     });
   }
 

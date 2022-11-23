@@ -74,7 +74,7 @@ public class Employee implements Serializable {
     @JsonIgnoreProperties(value = { "employees" }, allowSetters = true)
     private EmployeeType type;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "rel_employee__vehicle",
         joinColumns = @JoinColumn(name = "employee_id"),
@@ -83,6 +83,10 @@ public class Employee implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "merchant" }, allowSetters = true)
     private Set<Vehicle> vehicles = new HashSet<>();
+
+    @ManyToOne
+    @JsonIgnoreProperties(value = { "vehicles", "images", "exUsers", "employeeAccounts" }, allowSetters = true)
+    private Merchant merchant;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -319,6 +323,19 @@ public class Employee implements Serializable {
 
     public Employee removeVehicle(Vehicle vehicle) {
         this.vehicles.remove(vehicle);
+        return this;
+    }
+
+    public Merchant getMerchant() {
+        return this.merchant;
+    }
+
+    public void setMerchant(Merchant merchant) {
+        this.merchant = merchant;
+    }
+
+    public Employee merchant(Merchant merchant) {
+        this.setMerchant(merchant);
         return this;
     }
 

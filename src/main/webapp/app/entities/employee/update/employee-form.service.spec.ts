@@ -34,6 +34,7 @@ describe('Employee Form Service', () => {
             user: expect.any(Object),
             type: expect.any(Object),
             vehicles: expect.any(Object),
+            merchant: expect.any(Object),
           })
         );
       });
@@ -58,6 +59,7 @@ describe('Employee Form Service', () => {
             user: expect.any(Object),
             type: expect.any(Object),
             vehicles: expect.any(Object),
+            merchant: expect.any(Object),
           })
         );
       });

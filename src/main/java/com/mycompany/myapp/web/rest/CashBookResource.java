@@ -5,8 +5,10 @@ import com.mycompany.myapp.repository.CashBookRepository;
 import com.mycompany.myapp.service.CashBookQueryService;
 import com.mycompany.myapp.service.CashBookService;
 import com.mycompany.myapp.service.criteria.CashBookCriteria;
+import com.mycompany.myapp.service.dto.CashBookDTO;
 import com.mycompany.myapp.service.dto.RequestTransDTO;
 import com.mycompany.myapp.service.dto.TransactionDTO;
+import com.mycompany.myapp.service.mapper.CashBookMapper;
 import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
 import java.math.BigDecimal;
 import java.net.URI;
@@ -49,14 +51,18 @@ public class CashBookResource {
 
     private final CashBookQueryService cashBookQueryService;
 
+    private final CashBookMapper cashBookMapper;
+
     public CashBookResource(
         CashBookService cashBookService,
         CashBookRepository cashBookRepository,
-        CashBookQueryService cashBookQueryService
+        CashBookQueryService cashBookQueryService,
+        CashBookMapper cashBookMapper
     ) {
         this.cashBookService = cashBookService;
         this.cashBookRepository = cashBookRepository;
         this.cashBookQueryService = cashBookQueryService;
+        this.cashBookMapper = cashBookMapper;
     }
 
     /**
@@ -211,21 +217,39 @@ public class CashBookResource {
     @PostMapping("/getCashBookByDate")
     public ResponseEntity<TransactionDTO> findAllByDate(@Valid @RequestBody RequestTransDTO requestTransDTO) throws URISyntaxException {
         log.debug("REST request for a Mobile Bill Settlement : {}", requestTransDTO);
-        List<CashBook> cashBooks = cashBookService.findAllByDate(requestTransDTO).get();
-
-        BigDecimal cr = BigDecimal.ZERO;
-        BigDecimal dr = BigDecimal.ZERO;
-
         TransactionDTO transactions = new TransactionDTO();
-        for (CashBook cashBook : cashBooks) {
-            cr = cr.add(cashBook.getTransactionAmountCR());
-            dr = dr.add(cashBook.getTransactionAmountDR());
+        if (cashBookService.findAllByDate(requestTransDTO).isPresent()) {
+            List<CashBook> cashBooks = cashBookService.findAllByDate(requestTransDTO).get();
+
+            BigDecimal cr = BigDecimal.ZERO;
+            BigDecimal dr = BigDecimal.ZERO;
+
+            for (CashBook cashBook : cashBooks) {
+                cr = cr.add(cashBook.getTransactionAmountCR());
+                dr = dr.add(cashBook.getTransactionAmountDR());
+            }
+            transactions.setDr(dr);
+            transactions.setCr(cr);
+            transactions.setDate(requestTransDTO.getDate());
+            transactions.setVehicleNo("all");
+        } else {
+            BigDecimal cr = BigDecimal.ZERO;
+            BigDecimal dr = BigDecimal.ZERO;
+
+            transactions.setDr(dr);
+            transactions.setCr(cr);
+            transactions.setDate(requestTransDTO.getDate());
+            transactions.setVehicleNo("all");
         }
-        transactions.setDr(dr);
-        transactions.setCr(cr);
-        transactions.setDate(requestTransDTO.getDate());
-        transactions.setVehicleNo("all");
 
         return ResponseEntity.ok().body(transactions);
+    }
+
+    @PostMapping("/getCashBookDetailsByMerchantCode")
+    public ResponseEntity<List<CashBookDTO>> findAllCashBookDetailsByMerchantCode(@Valid @RequestBody RequestTransDTO requestTransDTO)
+        throws URISyntaxException {
+        log.debug("REST request for a Mobile Bill Settlement : {}", requestTransDTO);
+        List<CashBook> cashBooks = cashBookRepository.findAllByMerchant_Code(requestTransDTO.getMerchantCode()).get();
+        return ResponseEntity.ok(cashBookMapper.toDto(cashBooks));
     }
 }

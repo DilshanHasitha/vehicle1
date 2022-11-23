@@ -53,6 +53,8 @@ public class EmployeeCriteria implements Serializable, Criteria {
 
     private LongFilter vehicleId;
 
+    private LongFilter merchantId;
+
     private Boolean distinct;
 
     public EmployeeCriteria() {}
@@ -74,6 +76,7 @@ public class EmployeeCriteria implements Serializable, Criteria {
         this.imagesId = other.imagesId == null ? null : other.imagesId.copy();
         this.typeId = other.typeId == null ? null : other.typeId.copy();
         this.vehicleId = other.vehicleId == null ? null : other.vehicleId.copy();
+        this.merchantId = other.merchantId == null ? null : other.merchantId.copy();
         this.distinct = other.distinct;
     }
 
@@ -322,6 +325,21 @@ public class EmployeeCriteria implements Serializable, Criteria {
         this.vehicleId = vehicleId;
     }
 
+    public LongFilter getMerchantId() {
+        return merchantId;
+    }
+
+    public LongFilter merchantId() {
+        if (merchantId == null) {
+            merchantId = new LongFilter();
+        }
+        return merchantId;
+    }
+
+    public void setMerchantId(LongFilter merchantId) {
+        this.merchantId = merchantId;
+    }
+
     public Boolean getDistinct() {
         return distinct;
     }
@@ -356,6 +374,7 @@ public class EmployeeCriteria implements Serializable, Criteria {
             Objects.equals(imagesId, that.imagesId) &&
             Objects.equals(typeId, that.typeId) &&
             Objects.equals(vehicleId, that.vehicleId) &&
+            Objects.equals(merchantId, that.merchantId) &&
             Objects.equals(distinct, that.distinct)
         );
     }
@@ -379,6 +398,7 @@ public class EmployeeCriteria implements Serializable, Criteria {
             imagesId,
             typeId,
             vehicleId,
+            merchantId,
             distinct
         );
     }
@@ -403,6 +423,7 @@ public class EmployeeCriteria implements Serializable, Criteria {
             (imagesId != null ? "imagesId=" + imagesId + ", " : "") +
             (typeId != null ? "typeId=" + typeId + ", " : "") +
             (vehicleId != null ? "vehicleId=" + vehicleId + ", " : "") +
+            (merchantId != null ? "merchantId=" + merchantId + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";
     }

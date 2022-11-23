@@ -1,16 +1,19 @@
 package com.mycompany.myapp.web.rest;
 
 import com.mycompany.myapp.domain.Employee;
+import com.mycompany.myapp.domain.Vehicle;
 import com.mycompany.myapp.repository.EmployeeRepository;
+import com.mycompany.myapp.repository.VehicleRepository;
 import com.mycompany.myapp.service.EmployeeQueryService;
 import com.mycompany.myapp.service.EmployeeService;
 import com.mycompany.myapp.service.criteria.EmployeeCriteria;
+import com.mycompany.myapp.service.dto.EmployeeDTO;
+import com.mycompany.myapp.service.dto.RequestTransDTO;
+import com.mycompany.myapp.service.dto.UpdateEmployeeVehicleDTO;
 import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
@@ -45,15 +48,18 @@ public class EmployeeResource {
     private final EmployeeRepository employeeRepository;
 
     private final EmployeeQueryService employeeQueryService;
+    private final VehicleRepository vehicleRepository;
 
     public EmployeeResource(
         EmployeeService employeeService,
         EmployeeRepository employeeRepository,
-        EmployeeQueryService employeeQueryService
+        EmployeeQueryService employeeQueryService,
+        VehicleRepository vehicleRepository
     ) {
         this.employeeService = employeeService;
         this.employeeRepository = employeeRepository;
         this.employeeQueryService = employeeQueryService;
+        this.vehicleRepository = vehicleRepository;
     }
 
     /**
@@ -203,5 +209,48 @@ public class EmployeeResource {
             .noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
             .build();
+    }
+
+    @PostMapping("/findEmployeeByMerchantCode")
+    public ResponseEntity<List<EmployeeDTO>> findEmployeeByMerchantCode(@Valid @RequestBody RequestTransDTO requestTransDTO)
+        throws URISyntaxException {
+        log.debug("REST request for a Mobile Bill Settlement : {}", requestTransDTO);
+        List<Employee> employee = employeeService.findAllByMerchant_code(requestTransDTO.getMerchantCode());
+
+        List<EmployeeDTO> employees = new ArrayList<>();
+        for (Employee employee1 : employee) {
+            EmployeeDTO employeeDTO = new EmployeeDTO();
+
+            employeeDTO.setName(employee1.getFirstName());
+            if (!employee1.getVehicles().isEmpty() || employee1.getVehicles() == null) {
+                employeeDTO.setVehicleNo(employee1.getVehicles().iterator().next().getExpenceCode());
+            } else {
+                employeeDTO.setVehicleNo("");
+            }
+
+            employeeDTO.setPhone(employee1.getPhone());
+
+            employees.add(employeeDTO);
+        }
+
+        return ResponseEntity.ok().body(employees);
+    }
+
+    @PutMapping("/updateEmployeeVehicle")
+    public ResponseEntity<Employee> updateEmployeeVehicle(@Valid @RequestBody UpdateEmployeeVehicleDTO updateEmployeeVehicleDTO)
+        throws URISyntaxException {
+        log.debug("REST request for a Mobile Bill Settlement : {}", updateEmployeeVehicleDTO);
+        Vehicle vehicle = vehicleRepository.findOneByName(updateEmployeeVehicleDTO.getVehicle()).get();
+        Employee employee = employeeRepository.findOneByPhone(updateEmployeeVehicleDTO.getPhone()).get();
+
+        Set<Vehicle> vehicles = new HashSet<Vehicle>();
+        vehicles.add(vehicle);
+        employee.setVehicles(vehicles);
+
+        Employee result = employeeService.update(employee);
+        return ResponseEntity
+            .ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, employee.getId().toString()))
+            .body(result);
     }
 }
