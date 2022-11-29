@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="receipt" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="72963502-588b-4683-9b25-758e04b972c0">
+    <property name="ireport.zoom" value="1.610510000000001"/>
+    <property name="ireport.x" value="0"/>
+    <property name="ireport.y" value="0"/>
+    <parameter name="createdBy" isForPrompting="false" class="java.lang.String"></parameter>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+    <detail>
+        <band height="375" splitType="Stretch">
+            <image>
+                <reportElement x="38" y="12" width="50" height="50" uuid="cb7bc081-7293-450f-a13b-0f9536eff1af"/>
+                <imageExpression><![CDATA["C:\\Users\\dilsh\\Downloads\\wetransfer_my-best-friend-desktop-resize-zip_2022-11-24_0948\\My Best Friend - Desktop Resize\\My Best Friend - Desktop Resize\\Pet Book - Page 1 & 2, Dedication, Explore, Back Cover\\1.png"]]></imageExpression>
+            </image>
+            <image>
+                <reportElement x="324" y="146" width="279" height="229" uuid="e4c575ee-bde6-447f-8d77-ec10359c8103"/>
+                <imageExpression><![CDATA["C:\\Users\\dilsh\\Downloads\\wetransfer_my-best-friend-desktop-resize-zip_2022-11-24_0948\\My Best Friend - Desktop Resize\\My Best Friend - Desktop Resize\\Pet Book - Page 1 & 2, Dedication, Explore, Back Cover\\17.png"]]></imageExpression>
+            </image>
+            <staticText>
+                <reportElement x="83" y="-22" width="445" height="135" uuid="880b8e80-486a-40df-8cef-66b27047dcd3"/>
+                <textElement>
+                    <font size="92"/>
+                </textElement>
+                <text><![CDATA[Dilshan]]></text>
+            </staticText>
+
+<!--            <staticText>-->
+<!--                <reportElement x="83" y="-22" width="200" height="135" uuid="880b8e80-486a-40df-8cef-66b27047dcd3"/>-->
+<!--                <textElement>-->
+<!--                    <font size="92"/>-->
+<!--                </textElement>-->
+<!--                <text><![CDATA[$P{createdBy]]></text>-->
+<!--            </staticText>-->
+            <staticText>
+                <reportElement x="19" y="329" width="288" height="29" uuid="101b966f-f6c0-49ac-8883-31c3fd3e7292"/>
+                <textElement>
+                    <font size="20"/>
+                </textElement>
+                <text><![CDATA[Image testing]]></text>
+            </staticText>
+        </band>
+        <band height="50"/>
+    </detail>
+</jasperReport>

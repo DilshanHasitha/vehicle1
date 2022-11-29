@@ -14,6 +14,7 @@ export type EntityArrayResponseType = HttpResponse<IEmployee[]>;
 
 @Injectable({ providedIn: 'root' })
 export class EmployeeService {
+  public exportOrderUrl = SERVER_API_URL + 'api/printReceipt';
   protected resourceUrl = this.applicationConfigService.getEndpointFor('api/employees');
 
   constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
@@ -32,6 +33,13 @@ export class EmployeeService {
 
   find(id: number): Observable<EntityResponseType> {
     return this.http.get<IEmployee>(`${this.resourceUrl}/${id}`, { observe: 'response' });
+  }
+
+  exportPDF(): any {
+    const httpOptions = {
+      responseType: 'arraybuffer' as 'json',
+    };
+    return this.http.get<any>(this.exportOrderUrl + '?orderId=aaa&storeCode=kk', httpOptions);
   }
 
   query(req?: any): Observable<EntityArrayResponseType> {

@@ -6,16 +6,20 @@ import com.mycompany.myapp.repository.EmployeeRepository;
 import com.mycompany.myapp.repository.VehicleRepository;
 import com.mycompany.myapp.service.EmployeeQueryService;
 import com.mycompany.myapp.service.EmployeeService;
+import com.mycompany.myapp.service.ExportPDF;
 import com.mycompany.myapp.service.criteria.EmployeeCriteria;
 import com.mycompany.myapp.service.dto.EmployeeDTO;
 import com.mycompany.myapp.service.dto.RequestTransDTO;
 import com.mycompany.myapp.service.dto.UpdateEmployeeVehicleDTO;
 import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
 import java.util.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import net.sf.jasperreports.engine.JRException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,16 +54,20 @@ public class EmployeeResource {
     private final EmployeeQueryService employeeQueryService;
     private final VehicleRepository vehicleRepository;
 
+    private final ExportPDF exportPDF;
+
     public EmployeeResource(
         EmployeeService employeeService,
         EmployeeRepository employeeRepository,
         EmployeeQueryService employeeQueryService,
-        VehicleRepository vehicleRepository
+        VehicleRepository vehicleRepository,
+        ExportPDF exportPDF
     ) {
         this.employeeService = employeeService;
         this.employeeRepository = employeeRepository;
         this.employeeQueryService = employeeQueryService;
         this.vehicleRepository = vehicleRepository;
+        this.exportPDF = exportPDF;
     }
 
     /**
@@ -70,7 +78,8 @@ public class EmployeeResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/employees")
-    public ResponseEntity<Employee> createEmployee(@Valid @RequestBody Employee employee) throws URISyntaxException {
+    public ResponseEntity<Employee> createEmployee(@Valid @RequestBody Employee employee)
+        throws URISyntaxException, JRException, IOException {
         log.debug("REST request to save Employee : {}", employee);
         if (employee.getId() != null) {
             throw new BadRequestAlertException("A new employee cannot already have an ID", ENTITY_NAME, "idexists");
@@ -80,6 +89,18 @@ public class EmployeeResource {
             .created(new URI("/api/employees/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
+    }
+
+    @GetMapping("/printReceipt")
+    public byte[] receipt(String orderId, String storeCode) throws IOException, JRException {
+        Set<RequestTransDTO> details = new HashSet<>();
+        RequestTransDTO requestTransDTO = new RequestTransDTO();
+        requestTransDTO.setDate(LocalDate.now());
+        requestTransDTO.setMerchantCode("DEMO");
+        details.add(requestTransDTO);
+        String xmlName = "receipt.jrxml";
+        byte[] receipt = exportPDF.pdfCreator(details, xmlName);
+        return receipt;
     }
 
     /**

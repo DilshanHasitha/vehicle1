@@ -44,7 +44,7 @@
             <column name="country" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
-            <column name="image" type="${blobType}">
+            <column name="image" type="mediumblob">
                 <constraints nullable="true" />
             </column>
             <column name="image_content_type" type="varchar(255)">

@@ -238,10 +238,10 @@ public class ExpenseAccountResource {
         BigDecimal cr = BigDecimal.ZERO;
         BigDecimal dr = BigDecimal.ZERO;
         if (expenseAccount.getCr() != null) {
-            cr = expenseAccount.getCr();
+            dr = expenseAccount.getCr();
         }
         if (expenseAccount.getDr() != null) {
-            dr = expenseAccount.getDr();
+            cr = expenseAccount.getDr();
         }
 
         Expense expense = expenseRepository.findOneByExpenseCode(expenseAccount.getExpenseCode());

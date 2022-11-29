@@ -150,4 +150,13 @@ export class EmployeeUpdateComponent implements OnInit {
       )
       .subscribe((merchants: IMerchant[]) => (this.merchantsSharedCollection = merchants));
   }
+
+  exportPDF(): void {
+    this.employeeService.exportPDF().subscribe((response: any) => {
+      const file = new Blob([response], { type: 'application/pdf' });
+      alert;
+      const fileURL = URL.createObjectURL(file);
+      window.open(fileURL);
+    });
+  }
 }

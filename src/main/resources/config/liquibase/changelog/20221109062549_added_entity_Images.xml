@@ -29,7 +29,7 @@
             <column name="original_url" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
-            <column name="image_blob" type="${blobType}">
+            <column name="image_blob" type="mediumblob">
                 <constraints nullable="true" />
             </column>
             <column name="image_blob_content_type" type="varchar(255)">

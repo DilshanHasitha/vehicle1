@@ -5,9 +5,11 @@ import com.mycompany.myapp.repository.CashBookBalanceRepository;
 import com.mycompany.myapp.repository.ExpenseAccountBalanceRepository;
 import com.mycompany.myapp.repository.ExpenseAccountRepository;
 import com.mycompany.myapp.repository.VehicleRepository;
+import com.mycompany.myapp.security.SecurityUtils;
 import com.mycompany.myapp.service.dto.RequestTransDTO;
 import com.mycompany.myapp.service.dto.TransactionDTO;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -70,26 +72,66 @@ public class ExpenseAccountService {
      */
     public ExpenseAccount save(ExpenseAccount expenseAccount) {
         log.debug("Request to save ExpenseAccount : {}", expenseAccount);
+        ExpenseAccount account = new ExpenseAccount();
 
-        CashBook cashBook = new CashBook();
+        if (!expenseAccount.getTransactionAmountCR().equals(BigDecimal.ZERO)) {
+            CashBook cashBook = new CashBook();
+            ExpenseAccount newExpenseAccount = new ExpenseAccount();
 
-        cashBook.setTransactionDate(expenseAccount.getTransactionDate());
-        cashBook.setTransactionDescription(expenseAccount.getTransactionDescription());
+            newExpenseAccount.setTransactionAmountCR(expenseAccount.getTransactionAmountCR());
+            newExpenseAccount.setTransactionAmountDR(BigDecimal.ZERO);
+            newExpenseAccount.setTransactionBalance(expenseAccount.getTransactionBalance());
+            newExpenseAccount.setTransactionDescription(expenseAccount.getTransactionDescription());
+            newExpenseAccount.setExpense(expenseAccount.getExpense());
+            newExpenseAccount.setMerchant(expenseAccount.getMerchant());
+            newExpenseAccount.setTransactionDate(expenseAccount.getTransactionDate());
 
-        cashBook.setTransactionAmountCR(expenseAccount.getTransactionAmountDR());
-        cashBook.setTransactionAmountDR(expenseAccount.getTransactionAmountCR());
-        cashBook.setTransactionBalance(expenseAccount.getTransactionBalance());
-        cashBook.setMerchant(expenseAccount.getMerchant());
-        cashBook.setTransactionType(expenseAccount.getTransactionType());
+            cashBook.setTransactionDate(expenseAccount.getTransactionDate());
+            cashBook.setTransactionDescription(expenseAccount.getTransactionDescription());
+            cashBook.setTransactionType(expenseAccount.getTransactionType());
+            cashBook.setMerchant(expenseAccount.getMerchant());
 
-        cashBookService.save(cashBook);
+            cashBook.setTransactionAmountDR(expenseAccount.getTransactionAmountCR());
+            cashBook.setTransactionAmountCR(BigDecimal.ZERO);
+            cashBook.setTransactionBalance(expenseAccount.getTransactionAmountCR());
+
+            cashBookService.save(cashBook);
+
+            account = expenseAccountRepository.save(newExpenseAccount);
+        }
+
+        if (!expenseAccount.getTransactionAmountDR().equals(BigDecimal.ZERO)) {
+            CashBook cashBook = new CashBook();
+
+            ExpenseAccount newExpenseAccount = new ExpenseAccount();
+
+            newExpenseAccount.setTransactionAmountCR(BigDecimal.ZERO);
+            newExpenseAccount.setTransactionAmountDR(expenseAccount.getTransactionAmountDR());
+            newExpenseAccount.setTransactionBalance(expenseAccount.getTransactionBalance());
+            newExpenseAccount.setTransactionDescription(expenseAccount.getTransactionDescription());
+            newExpenseAccount.setExpense(expenseAccount.getExpense());
+            newExpenseAccount.setMerchant(expenseAccount.getMerchant());
+            newExpenseAccount.setTransactionDate(expenseAccount.getTransactionDate());
+
+            cashBook.setTransactionDate(expenseAccount.getTransactionDate());
+            cashBook.setTransactionDescription(expenseAccount.getTransactionDescription());
+            cashBook.setTransactionType(expenseAccount.getTransactionType());
+            cashBook.setMerchant(expenseAccount.getMerchant());
+
+            cashBook.setTransactionAmountCR(expenseAccount.getTransactionAmountDR());
+            cashBook.setTransactionAmountDR(BigDecimal.ZERO);
+            cashBook.setTransactionBalance(expenseAccount.getTransactionAmountDR());
+
+            cashBookService.save(cashBook);
+            account = expenseAccountRepository.save(newExpenseAccount);
+        }
 
         if (cashBookBalanceRepository.findOneByMerchant_Code(expenseAccount.getMerchant().getCode()).isPresent()) {
             CashBookBalance cashBookBalance = cashBookBalanceRepository
                 .findOneByMerchant_Code(expenseAccount.getMerchant().getCode())
                 .get();
             cashBookBalance.setBalance(
-                cashBookBalance.getBalance().add(expenseAccount.getTransactionAmountDR()).subtract(expenseAccount.getTransactionAmountCR())
+                cashBookBalance.getBalance().add(expenseAccount.getTransactionAmountCR()).subtract(expenseAccount.getTransactionAmountDR())
             );
 
             cashBookBalanceService.update(cashBookBalance);
@@ -109,7 +151,7 @@ public class ExpenseAccountService {
             expenseAccountBalanceService.update(expenseAccountBalance);
         }
 
-        return expenseAccountRepository.save(expenseAccount);
+        return account;
     }
 
     /**
